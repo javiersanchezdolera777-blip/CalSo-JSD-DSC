@@ -106,6 +106,22 @@ Move the array designators [] to the type.
 
 He movido los corchetes cambiando Direccion arrayDirecciones[] a Direccion[] arrayDirecciones.
 
+---
+### Disconformidad 3 — `java:S2119`
+
+**Localización:** `src/juego/geometria/Direccion.java`, línea 21 
+**Responsable:** Diego Sánchez Cano  
+
+**Problema detectado**
+
+Save and re-use this "Random".
+SonarQube nos advierte de que podemos reutilizar la misma instancia.
+
+**Solución adoptada**
+
+He declarado el atributo random como privado y estático para instanciarlo una sola vez y poder reutilizarlo en cada llamada.
+
+---
 ### Disconformidad 3 — `java:SXXXX`
 
 **Localización:** `src/.../Clase.java`, línea XX  
@@ -117,15 +133,17 @@ Descripción breve del problema indicado por SonarQube for Eclipse.
 
 **Solución adoptada**
 
-Descripción de la modificación realizada para resolver la disconformidad.---
-
+---
 ## 5. Resumen de las correcciones
 
-|  Nº | Regla Sonar  | Responsable        | Commit    | Resultado |
-| --: | ------------ | ------------------ | --------- | --------- |
-|   1 | `java:S1598` | Diego Sánchez Cano | `7d0a70d` | Resuelta  |
-|   2 | `java:S1598` | Diego Sánchez Cano | `c32087d` | Resuelta  |
-|   3 | `java:S1197` | Diego Sánchez Cano | `abcdef3` | Resuelta  |
+|        Nº | Regla Sonar  | Responsable        | Commit    | Resultado |
+| --------: | ------------ | ------------------ | --------- | --------- |
+| 1, 12, 23 | `java:S1598` | Diego Sánchez Cano | `7d0a70d` | Resuelta  |
+|         4 | `java:S1598` | Diego Sánchez Cano | `c32087d` | Resuelta  |
+|         2 | `java:S1197` | Diego Sánchez Cano | `abcdef3` | Resuelta  |
+|         3 | `java:S2119` | Diego Sánchez Cano |           | Resuelta  |
+|           |              |                    |           |           |
+|           |              |                    |           |           |
 
 ---
 

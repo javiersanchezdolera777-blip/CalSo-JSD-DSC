@@ -4,6 +4,7 @@ import java.util.*;
 
 public enum Direccion {
 	ARRIBA, ABAJO, DERECHA, IZQUIERDA;
+	private static final Random RND = new Random(); //sol disconformidad 4
 	
 	public Direccion opuesta(Direccion direccion) {
 		switch (direccion) {
@@ -18,8 +19,7 @@ public enum Direccion {
 	public Direccion aleatoria() {
 		Direccion[] arrayDirecciones = Direccion.values();
 
-		Random rnd = new Random();
-		int indice = rnd.nextInt(4);
+		int indice = RND.nextInt(4);
 
 		return arrayDirecciones[indice];
 	}

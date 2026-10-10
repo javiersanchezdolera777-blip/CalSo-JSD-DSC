@@ -50,6 +50,8 @@ En el análisis inicial se han identificado las siguientes disconformidades:
 |  23 | `java:S1598` | `Circulo.java`   |     1 | File path "src\geometria" should match package name "juego.geometria". Move the file or change the package name. |
 |  24 | `java:S1172` | `Circulo.java`   |    10 | Remove this unused method parameter "centroIni".                                                                 |
 |  25 | `java:S101`  | `Circulo.java`   |     3 | Rename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.                                    |
+|  26 | java:S2201   | Programa.java    |    16 | Resource	Date	Description<br>Programa.java	9 days ago	The return value of "concat" must be used.<br>             |
+|  27 | java:S1128   | Punto.java       |     4 | Resource	Date	Description<br>Punto.java	9 days ago	Remove this unused import 'java.util.Random'.<br>             |
 
 > Deben incluirse **todas las disconformidades observadas en el análisis inicial**.
 
@@ -57,18 +59,21 @@ En el análisis inicial se han identificado las siguientes disconformidades:
 
 ## 4. Soluciones adoptadas
 
-### Disconformidad 1 — `java:SXXXX`
+### Disconformidad 1,12 y 23 — `java:S1598`
 
-**Localización:** `src/.../Clase.java`, línea XX  
-**Responsable:** NOMBRE Y APELLIDOS  
+**Localización:** `src/geometria/Direccion.java`, `Punto.java`, `Circulo.java` línea 1
+**Responsable:** Diego Sánchez Cano  
 
 **Problema detectado**
 
-Descripción breve del problema indicado por SonarQube for Eclipse.
+Package declaration should match source file directory
+SonarQube advierte que la ruta física de varios archivos en el proyecto no coincide con el paquete declarado en su código (`juego.geometria`)
+
 
 **Solución adoptada**
 
-Descripción de la modificación realizada para resolver la disconformidad.
+Se ha renombrado el paquete geometria a juego.geometria.
+Han aparecido 2 nuevos errores, el 26 y 27 definidos en la tabla de disconformidades.
 
 ---
 
@@ -104,11 +109,11 @@ Descripción de la modificación realizada para resolver la disconformidad.
 
 ## 5. Resumen de las correcciones
 
-| Nº | Regla Sonar | Responsable | Commit | Resultado |
-|---:|---|---|---|---|
-| 1 | `java:SXXXX` | Nombre y apellidos | `abcdef1` | Resuelta |
-| 2 | `java:SXXXX` | Nombre y apellidos | `abcdef2` | Resuelta |
-| 3 | `java:SXXXX` | Nombre y apellidos | `abcdef3` | Resuelta |
+|  Nº | Regla Sonar  | Responsable        | Commit    | Resultado |
+| --: | ------------ | ------------------ | --------- | --------- |
+|   1 | `java:S1598` | Diego Sánchez Cano | `abcdef1` | Resuelta  |
+|   2 | `java:SXXXX` | Nombre y apellidos | `abcdef2` | Resuelta  |
+|   3 | `java:SXXXX` | Nombre y apellidos | `abcdef3` | Resuelta  |
 
 ---
 

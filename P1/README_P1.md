@@ -122,16 +122,17 @@ SonarQube nos advierte de que podemos reutilizar la misma instancia.
 He declarado el atributo random como privado y estático para instanciarlo una sola vez y poder reutilizarlo en cada llamada.
 
 ---
-### Disconformidad 3 — `java:SXXXX`
+### Disconformidad 5 y 6 — `java:S1197`
 
-**Localización:** `src/.../Clase.java`, línea XX  
-**Responsable:** NOMBRE Y APELLIDOS  
+**Localización:** `src/juego/pruebas/Programa.java`, línea 7 y 10 
+**Responsable:** Diego Sánchez Cano 
 
 **Problema detectado**
 
-Descripción breve del problema indicado por SonarQube for Eclipse.
+SonarQueb avisa de que los arrays no siguen la notación estándar porque los corchetes estan junto al nombre y no junto al tipo
 
 **Solución adoptada**
+He movido los corchetes junto al tipo y los he quitado del nombre.
 
 ---
 ## 5. Resumen de las correcciones
@@ -141,8 +142,8 @@ Descripción breve del problema indicado por SonarQube for Eclipse.
 | 1, 12, 23 | `java:S1598` | Diego Sánchez Cano | `7d0a70d` | Resuelta  |
 |         4 | `java:S1598` | Diego Sánchez Cano | `c32087d` | Resuelta  |
 |         2 | `java:S1197` | Diego Sánchez Cano | `abcdef3` | Resuelta  |
-|         3 | `java:S2119` | Diego Sánchez Cano |           | Resuelta  |
-|           |              |                    |           |           |
+|         3 | `java:S2119` | Diego Sánchez Cano | 8f97fe4   | Resuelta  |
+|     5 y 6 | `java:S1197` | Diego Sánchez Cano |           | Resuelta  |
 |           |              |                    |           |           |
 
 ---

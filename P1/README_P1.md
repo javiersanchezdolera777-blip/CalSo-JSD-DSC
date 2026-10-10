@@ -77,18 +77,19 @@ Han aparecido 2 nuevos errores, el 26 y 27 definidos en la tabla de disconformid
 
 ---
 
-### Disconformidad 2 — `java:SXXXX`
+### Disconformidad 4 — `java:S1598
 
-**Localización:** `src/.../Clase.java`, línea XX  
-**Responsable:** NOMBRE Y APELLIDOS  
+**Localización:** `src/pruebas/Programa.java´ linea 1  
+**Responsable:** Diego Sánchez Cano 
 
 **Problema detectado**
 
-Descripción breve del problema indicado por SonarQube for Eclipse.
+Package declaration should match source file directory
+SonarQube advierte que la ruta física de varios archivos en el proyecto no coincide con el paquete declarado en su código (`juego.geometria`)
 
 **Solución adoptada**
 
-Descripción de la modificación realizada para resolver la disconformidad.
+Se ha renombrado el paquete pruebas por juego.pruebas.
 
 ---
 
@@ -111,8 +112,8 @@ Descripción de la modificación realizada para resolver la disconformidad.
 
 |  Nº | Regla Sonar  | Responsable        | Commit    | Resultado |
 | --: | ------------ | ------------------ | --------- | --------- |
-|   1 | `java:S1598` | Diego Sánchez Cano | `abcdef1` | Resuelta  |
-|   2 | `java:SXXXX` | Nombre y apellidos | `abcdef2` | Resuelta  |
+|   1 | `java:S1598` | Diego Sánchez Cano | `7d0a70d` | Resuelta  |
+|   2 | `java:S1598` | Diego Sánchez Cano | `abcdef2` | Resuelta  |
 |   3 | `java:SXXXX` | Nombre y apellidos | `abcdef3` | Resuelta  |
 
 ---

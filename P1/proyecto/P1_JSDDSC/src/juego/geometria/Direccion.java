@@ -16,7 +16,7 @@ public enum Direccion {
 	}
 
 	public Direccion aleatoria() {
-		Direccion arrayDirecciones[] = Direccion.values();
+		Direccion[] arrayDirecciones = Direccion.values();
 
 		Random rnd = new Random();
 		int indice = rnd.nextInt(4);

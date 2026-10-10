@@ -93,6 +93,19 @@ Se ha renombrado el paquete pruebas por juego.pruebas.
 
 ---
 
+### Disconformidad 2 — `java:S1197`
+
+**Localización:** `src/juego/geometria/Direccion.java`, línea 19
+**Responsable:** Diego Sánchez Cano  
+
+**Problema detectado**
+
+Move the array designators [] to the type.
+
+**Solución adoptada**
+
+He movido los corchetes cambiando Direccion arrayDirecciones[] a Direccion[] arrayDirecciones.
+
 ### Disconformidad 3 — `java:SXXXX`
 
 **Localización:** `src/.../Clase.java`, línea XX  
@@ -104,17 +117,15 @@ Descripción breve del problema indicado por SonarQube for Eclipse.
 
 **Solución adoptada**
 
-Descripción de la modificación realizada para resolver la disconformidad.
-
----
+Descripción de la modificación realizada para resolver la disconformidad.---
 
 ## 5. Resumen de las correcciones
 
 |  Nº | Regla Sonar  | Responsable        | Commit    | Resultado |
 | --: | ------------ | ------------------ | --------- | --------- |
 |   1 | `java:S1598` | Diego Sánchez Cano | `7d0a70d` | Resuelta  |
-|   2 | `java:S1598` | Diego Sánchez Cano | `abcdef2` | Resuelta  |
-|   3 | `java:SXXXX` | Nombre y apellidos | `abcdef3` | Resuelta  |
+|   2 | `java:S1598` | Diego Sánchez Cano | `c32087d` | Resuelta  |
+|   3 | `java:S1197` | Diego Sánchez Cano | `abcdef3` | Resuelta  |
 
 ---
 

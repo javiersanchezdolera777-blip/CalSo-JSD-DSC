@@ -50,8 +50,9 @@ En el análisis inicial se han identificado las siguientes disconformidades:
 |  23 | `java:S1598` | `Circulo.java`   |     1 | File path "src\geometria" should match package name "juego.geometria". Move the file or change the package name. |
 |  24 | `java:S1172` | `Circulo.java`   |    10 | Remove this unused method parameter "centroIni".                                                                 |
 |  25 | `java:S101`  | `Circulo.java`   |     3 | Rename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.                                    |
-|  26 | java:S2201   | Programa.java    |    16 | Resource	Date	Description<br>Programa.java	9 days ago	The return value of "concat" must be used.<br>             |
-|  27 | java:S1128   | Punto.java       |     4 | Resource	Date	Description<br>Punto.java	9 days ago	Remove this unused import 'java.util.Random'.<br>             |
+|  26 | `java:S2201` | `Programa.java`  |    16 | Resource	Date	Description<br>Programa.java	9 days ago	The return value of "concat" must be used.<br>             |
+|  27 | `java:S1128` | `Punto.java`     |     4 | Resource	Date	Description<br>Punto.java	9 days ago	Remove this unused import 'java.util.Random'.<br>             |
+|  28 | `java:S1206` | `Punto.java`     |       | This class overrides "equals()" and should therefore also override "hashCode()".<br>                             |
 
 > Deben incluirse **todas las disconformidades observadas en el análisis inicial**.
 
@@ -187,19 +188,38 @@ Cast one of the operands of this subtraction operation to a "double". SonarQube 
 He realizado un casting a 'double' en el primer operando de las dos restas de la operación.
 
 ---
+### Disconformidades 11, 15 y 28 — `java:S1201`, `java:S1905` y `java:S1206`
+
+**Localización:** `src/juego/pruebas/Punto.java`, líneas 126 y 130
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Se han detectado 3 problemas relacionados con el metodo 'equals':
+1) S1201: Sobrecarga incorrecta de 'equals' usando 'Punto' en lugar de 'Object'.
+2) S1905: Casting innecesario a 'Punto' en la línea 130 porque el parámetro original ya era de ese tipo. 
+3. S1206: Generado al resolver los dos anteriores. Falta de implementación de 'hashCode()' al modificar 'equals()'.
+
+**Solución adoptada**
+
+He corregido la firma del método a 'public boolean equals(Object obj)', lo cual soluciona S1201 y, a su vez, hace que el casting de la línea 130 pase a ser estrictamente necesario (solucionando S1905). Además, se han añadido comprobaciones de tipo y he implementado el método 'hashCode()' solucionando la disconformidad generada S1206.
+
+---
 ## 5. Resumen de las correcciones
 
-|        Nº | Regla Sonar  | Responsable           | Commit    | Resultado |
-| --------: | ------------ | --------------------- | --------- | --------- |
-| 1, 12, 23 | `java:S1598` | Diego Sánchez Cano    | `7d0a70d` | Resuelta  |
-|         4 | `java:S1598` | Diego Sánchez Cano    | `c32087d` | Resuelta  |
-|         2 | `java:S1197` | Diego Sánchez Cano    | `abcdef3` | Resuelta  |
-|         3 | `java:S2119` | Diego Sánchez Cano    | `8f97fe4` | Resuelta  |
-|     5 y 6 | `java:S1197` | Diego Sánchez Cano    | `323e4d0` | Resuelta  |
-|         7 | `java:S106`  | Javier Sánchez Dólera | `0374d17` | Resuelta  |
-|         8 | `java:S4973` | Javier Sánchez Dólera | `4790710` | Resuelta  |
-|        26 | `java:S2201` | Javier Sánchez Dólera | `257e07d` | Resuelta  |
-|    9 y 10 | `java:S2184` | Javier Sánchez Dólera |           | Resuelta  |
+|          Nº | Regla Sonar                               | Responsable           | Commit    | Resultado |
+| ----------: | ----------------------------------------- | --------------------- | --------- | --------- |
+|   1, 12, 23 | `java:S1598`                              | Diego Sánchez Cano    | `7d0a70d` | Resuelta  |
+|           4 | `java:S1598`                              | Diego Sánchez Cano    | `c32087d` | Resuelta  |
+|           2 | `java:S1197`                              | Diego Sánchez Cano    | `abcdef3` | Resuelta  |
+|           3 | `java:S2119`                              | Diego Sánchez Cano    | `8f97fe4` | Resuelta  |
+|       5 y 6 | `java:S1197`                              | Diego Sánchez Cano    | `323e4d0` | Resuelta  |
+|           7 | `java:S106`                               | Javier Sánchez Dólera | `0374d17` | Resuelta  |
+|           8 | `java:S4973`                              | Javier Sánchez Dólera | `4790710` | Resuelta  |
+|          26 | `java:S2201`                              | Javier Sánchez Dólera | `257e07d` | Resuelta  |
+|      9 y 10 | `java:S2184`                              | Javier Sánchez Dólera | `19a4354` | Resuelta  |
+| 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera |           | Resuelta  |
+|             |                                           |                       |           |           |
 
 ---
 

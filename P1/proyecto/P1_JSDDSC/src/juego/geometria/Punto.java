@@ -123,14 +123,22 @@ public class Punto {
 	}
 
 	
-	public boolean equals(Punto obj) {
-		if (this == obj)
-			return true;
+	@Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        // Comprobamos nulos y clases para evitar excepciones
+        if (obj == null || getClass() != obj.getClass())
+            return false;
 
-		Punto other = (Punto) obj;
-		
-		return  (x == other.x && y == other.y);
-	}
+        Punto other = (Punto) obj; // ¡Este cast ahora SÍ es necesario! (Soluciona S1905)
+        return (x == other.x && y == other.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(x, y);
+    }
 
 	@Override
 	public Punto clone(){

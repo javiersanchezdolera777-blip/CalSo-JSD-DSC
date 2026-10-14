@@ -148,6 +148,19 @@ Replace this use of System.out by a logger. SonarQube indica que no debemos usar
 He importado 'java.util.logging.Logger' y sustituido 'System.Out.println()' por 'LOGGER.info()'
 
 ---
+### Disconformidad 8 — `java:S4973`
+
+**Localización:** `src/juego/pruebas/Programa.java`, línea 18 
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Strings and Boxed types should be compared using "equals()". SonarQube indica que no debemos usar el operador `==` para comparar objetos 'String' porque eso compara referencias de memoria, no el contenido del texto.
+
+**Solución adoptada**
+He sustituido 'info == "" ' por 'info.equals("")'.
+
+---
 ## 5. Resumen de las correcciones
 
 |        Nº | Regla Sonar  | Responsable           | Commit    | Resultado |
@@ -157,7 +170,9 @@ He importado 'java.util.logging.Logger' y sustituido 'System.Out.println()' por 
 |         2 | `java:S1197` | Diego Sánchez Cano    | `abcdef3` | Resuelta  |
 |         3 | `java:S2119` | Diego Sánchez Cano    | `8f97fe4` | Resuelta  |
 |     5 y 6 | `java:S1197` | Diego Sánchez Cano    | `323e4d0` | Resuelta  |
-|         7 | `java:S106`  | Javier Sánchez Dólera | ``        | Resuelta  |
+|         7 | `java:S106`  | Javier Sánchez Dólera | `0374d17` | Resuelta  |
+|         8 | `java:S4973` | Javier Sánchez Dólera |           | Resuelta  |
+|           |              |                       |           |           |
 
 ---
 

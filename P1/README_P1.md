@@ -161,6 +161,19 @@ Strings and Boxed types should be compared using "equals()". SonarQube indica qu
 He sustituido 'info == "" ' por 'info.equals("")'.
 
 ---
+### Disconformidad 26 — `java:S2201`
+
+**Localización:** `src/juego/pruebas/Programa.java`, línea 16
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+The return value of "concat" must be used. SonarQube avisa de que no estamos utilizando el resultado de la función 'concat()'. Como las 'String' son inmutables en Java, debemos guardar el resultado en una variable nueva.
+
+**Solución adoptada**
+He almacenado el resultado de la función con la variable 'info' de nuevo. "info = info.concat(punto.toString());"
+
+---
 ## 5. Resumen de las correcciones
 
 |        Nº | Regla Sonar  | Responsable           | Commit    | Resultado |
@@ -171,8 +184,8 @@ He sustituido 'info == "" ' por 'info.equals("")'.
 |         3 | `java:S2119` | Diego Sánchez Cano    | `8f97fe4` | Resuelta  |
 |     5 y 6 | `java:S1197` | Diego Sánchez Cano    | `323e4d0` | Resuelta  |
 |         7 | `java:S106`  | Javier Sánchez Dólera | `0374d17` | Resuelta  |
-|         8 | `java:S4973` | Javier Sánchez Dólera |           | Resuelta  |
-|           |              |                       |           |           |
+|         8 | `java:S4973` | Javier Sánchez Dólera | `4790710` | Resuelta  |
+|        26 | `java:S2201` | Javier Sánchez Dólera |           | Resuelta  |
 
 ---
 

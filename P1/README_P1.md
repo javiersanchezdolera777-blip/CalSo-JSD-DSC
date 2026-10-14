@@ -135,16 +135,29 @@ SonarQueb avisa de que los arrays no siguen la notación estándar porque los co
 He movido los corchetes junto al tipo y los he quitado del nombre.
 
 ---
+### Disconformidad 7 — `java:S106`
+
+**Localización:** `src/juego/pruebas/Programa.java`, línea 20 
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Replace this use of System.out by a logger. SonarQube indica que no debemos usar la salida estándar para imprimir los mensajes. 
+
+**Solución adoptada**
+He importado 'java.util.logging.Logger' y sustituido 'System.Out.println()' por 'LOGGER.info()'
+
+---
 ## 5. Resumen de las correcciones
 
-|        Nº | Regla Sonar  | Responsable        | Commit    | Resultado |
-| --------: | ------------ | ------------------ | --------- | --------- |
-| 1, 12, 23 | `java:S1598` | Diego Sánchez Cano | `7d0a70d` | Resuelta  |
-|         4 | `java:S1598` | Diego Sánchez Cano | `c32087d` | Resuelta  |
-|         2 | `java:S1197` | Diego Sánchez Cano | `abcdef3` | Resuelta  |
-|         3 | `java:S2119` | Diego Sánchez Cano | 8f97fe4   | Resuelta  |
-|     5 y 6 | `java:S1197` | Diego Sánchez Cano |           | Resuelta  |
-|           |              |                    |           |           |
+|        Nº | Regla Sonar  | Responsable           | Commit    | Resultado |
+| --------: | ------------ | --------------------- | --------- | --------- |
+| 1, 12, 23 | `java:S1598` | Diego Sánchez Cano    | `7d0a70d` | Resuelta  |
+|         4 | `java:S1598` | Diego Sánchez Cano    | `c32087d` | Resuelta  |
+|         2 | `java:S1197` | Diego Sánchez Cano    | `abcdef3` | Resuelta  |
+|         3 | `java:S2119` | Diego Sánchez Cano    | `8f97fe4` | Resuelta  |
+|     5 y 6 | `java:S1197` | Diego Sánchez Cano    | `323e4d0` | Resuelta  |
+|         7 | `java:S106`  | Javier Sánchez Dólera | ``        | Resuelta  |
 
 ---
 

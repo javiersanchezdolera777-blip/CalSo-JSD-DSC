@@ -140,18 +140,7 @@ public class Punto {
         return java.util.Objects.hash(x, y);
     }
 
-	@Override
-	public Punto clone(){
-		Punto copia;
-
-		try{
-			copia = (Punto)super.clone();
-			return copia;
-		}
-		catch(CloneNotSupportedException e){ }
-
-		return null;
-	}
+	
 
 }
 

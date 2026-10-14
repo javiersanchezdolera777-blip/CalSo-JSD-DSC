@@ -80,7 +80,7 @@ Han aparecido 2 nuevos errores, el 26 y 27 definidos en la tabla de disconformid
 
 ### Disconformidad 4 — `java:S1598
 
-**Localización:** `src/pruebas/Programa.java´ linea 1  
+**Localización:** `src/juego/pruebas/Programa.java´ linea 1  
 **Responsable:** Diego Sánchez Cano 
 
 **Problema detectado**
@@ -143,7 +143,8 @@ He movido los corchetes junto al tipo y los he quitado del nombre.
 
 **Problema detectado**
 
-Replace this use of System.out by a logger. SonarQube indica que no debemos usar la salida estándar para imprimir los mensajes. 
+Replace this use of System.out by a logger. 
+SonarQube indica que no debemos usar la salida estándar para imprimir los mensajes. 
 
 **Solución adoptada**
 He importado 'java.util.logging.Logger' y sustituido 'System.Out.println()' por 'LOGGER.info()'
@@ -156,7 +157,8 @@ He importado 'java.util.logging.Logger' y sustituido 'System.Out.println()' por 
 
 **Problema detectado**
 
-Strings and Boxed types should be compared using "equals()". SonarQube indica que no debemos usar el operador `==` para comparar objetos 'String' porque eso compara referencias de memoria, no el contenido del texto.
+Strings and Boxed types should be compared using "equals()". 
+SonarQube indica que no debemos usar el operador `==` para comparar objetos 'String' porque eso compara referencias de memoria, no el contenido del texto.
 
 **Solución adoptada**
 He sustituido 'info == "" ' por 'info.equals("")'.
@@ -169,7 +171,8 @@ He sustituido 'info == "" ' por 'info.equals("")'.
 
 **Problema detectado**
 
-The return value of "concat" must be used. SonarQube avisa de que no estamos utilizando el resultado de la función 'concat()'. Como las 'String' son inmutables en Java, debemos guardar el resultado en una variable nueva.
+The return value of "concat" must be used. 
+SonarQube avisa de que no estamos utilizando el resultado de la función 'concat()'. Como las 'String' son inmutables en Java, debemos guardar el resultado en una variable nueva.
 
 **Solución adoptada**
 He almacenado el resultado de la función con la variable 'info' de nuevo. "info = info.concat(punto.toString());"
@@ -177,12 +180,13 @@ He almacenado el resultado de la función con la variable 'info' de nuevo. "info
 ---
 ### Disconformidades 9 y 10 — `java:S2184`
 
-**Localización:** `src/juego/pruebas/Punto.java`, línea 117
+**Localización:** `src/juego/geometria/Punto.java`, línea 117
 **Responsable:** Javier Sánchez Dólera
 
 **Problema detectado**
 
-Cast one of the operands of this subtraction operation to a "double". SonarQube avisa de que la operación se hace con números enteros y el resultado esperado es un 'double'. Esto puede dar problemas de precisión o desbordamiento.
+Cast one of the operands of this subtraction operation to a "double". 
+SonarQube avisa de que la operación se hace con números enteros y el resultado esperado es un 'double'. Esto puede dar problemas de precisión o desbordamiento.
 
 **Solución adoptada**
 He realizado un casting a 'double' en el primer operando de las dos restas de la operación.
@@ -190,7 +194,7 @@ He realizado un casting a 'double' en el primer operando de las dos restas de la
 ---
 ### Disconformidades 11, 15 y 28 — `java:S1201`, `java:S1905` y `java:S1206`
 
-**Localización:** `src/juego/pruebas/Punto.java`, líneas 126 y 130
+**Localización:** `src/juego/geometria/Punto.java`, líneas 126 y 130
 **Responsable:** Javier Sánchez Dólera
 
 **Problema detectado**
@@ -203,6 +207,25 @@ Se han detectado 3 problemas relacionados con el metodo 'equals':
 **Solución adoptada**
 
 He corregido la firma del método a 'public boolean equals(Object obj)', lo cual soluciona S1201 y, a su vez, hace que el casting de la línea 130 pase a ser estrictamente necesario (solucionando S1905). Además, se han añadido comprobaciones de tipo y he implementado el método 'hashCode()' solucionando la disconformidad generada S1206.
+
+---
+### Disconformidad 13, 14 y 22 — `java:S2975`, `java:S108` y `java:S2225`
+
+**Localización:** `src/juego/geometria/Punto.java`, línea 136 a 145
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Se detectan tres problemas relacionados con la implementación del método 'clone':
+1) S2975: Remove this "clone" implementation; use a copy constructor or copy factory instead.
+SonarQube indica que el uso de 'clone()' está desaconsejado en favor de constructores de copia. 
+2) S108: Remove this block of code, fill it in, or add a comment explaining why it is empty. 
+SonarQube dice que el método contenía un bloque 'catch' vacío para la excepción 'CloneNotSupportedException'. 
+3) S2225: Return a non null object.
+SonarQube indica que el método podía retornar un valor nulo en ciertas condiciones.
+
+**Solución adoptada**
+Como la clase 'Punto' ya tenía un constructor de copia 'public Punto(Punto otra)', simplemente he eliminado el método 'public Punto clone()'. Con solo esto, también se han eliminado las disconformidades 14 y 22.
 
 ---
 ## 5. Resumen de las correcciones
@@ -218,7 +241,8 @@ He corregido la firma del método a 'public boolean equals(Object obj)', lo cual
 |           8 | `java:S4973`                              | Javier Sánchez Dólera | `4790710` | Resuelta  |
 |          26 | `java:S2201`                              | Javier Sánchez Dólera | `257e07d` | Resuelta  |
 |      9 y 10 | `java:S2184`                              | Javier Sánchez Dólera | `19a4354` | Resuelta  |
-| 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera |           | Resuelta  |
+| 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera | `3ce6e8b` | Resuelta  |
+| 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera |           | Resuelta  |
 |             |                                           |                       |           |           |
 
 ---

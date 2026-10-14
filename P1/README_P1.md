@@ -174,6 +174,19 @@ The return value of "concat" must be used. SonarQube avisa de que no estamos uti
 He almacenado el resultado de la función con la variable 'info' de nuevo. "info = info.concat(punto.toString());"
 
 ---
+### Disconformidades 9 y 10 — `java:S2184`
+
+**Localización:** `src/juego/pruebas/Punto.java`, línea 117
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Cast one of the operands of this subtraction operation to a "double". SonarQube avisa de que la operación se hace con números enteros y el resultado esperado es un 'double'. Esto puede dar problemas de precisión o desbordamiento.
+
+**Solución adoptada**
+He realizado un casting a 'double' en el primer operando de las dos restas de la operación.
+
+---
 ## 5. Resumen de las correcciones
 
 |        Nº | Regla Sonar  | Responsable           | Commit    | Resultado |
@@ -185,7 +198,8 @@ He almacenado el resultado de la función con la variable 'info' de nuevo. "info
 |     5 y 6 | `java:S1197` | Diego Sánchez Cano    | `323e4d0` | Resuelta  |
 |         7 | `java:S106`  | Javier Sánchez Dólera | `0374d17` | Resuelta  |
 |         8 | `java:S4973` | Javier Sánchez Dólera | `4790710` | Resuelta  |
-|        26 | `java:S2201` | Javier Sánchez Dólera |           | Resuelta  |
+|        26 | `java:S2201` | Javier Sánchez Dólera | `257e07d` | Resuelta  |
+|    9 y 10 | `java:S2184` | Javier Sánchez Dólera |           | Resuelta  |
 
 ---
 

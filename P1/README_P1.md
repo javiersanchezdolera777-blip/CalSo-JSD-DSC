@@ -228,6 +228,20 @@ SonarQube indica que el método podía retornar un valor nulo en ciertas condici
 Como la clase 'Punto' ya tenía un constructor de copia 'public Punto(Punto otra)', simplemente he eliminado el método 'public Punto clone()'. Con solo esto, también se han eliminado las disconformidades 14 y 22.
 
 ---
+### Disconformidad 16 y 27 — java:S1128
+
+**Localización:** `src/juego/geometria/Punto.java`, línea 3 y 4
+**Responsable:** Diego Sánchez Cano
+
+**Problema detectado**
+
+Problema 1. Remove this unnecessary import: java.lang classes are always implicitly imported.
+Problema 2. Remove this unused import 'java.util.Random'.
+
+**Solución adoptada**
+Se ha eliminado las líneas de importación redundantes para mantener el código limpio y cumplir con las convenciones del lenguaje.
+
+---
 ## 5. Resumen de las correcciones
 
 |          Nº | Regla Sonar                               | Responsable           | Commit    | Resultado |
@@ -243,6 +257,7 @@ Como la clase 'Punto' ya tenía un constructor de copia 'public Punto(Punto otra
 |      9 y 10 | `java:S2184`                              | Javier Sánchez Dólera | `19a4354` | Resuelta  |
 | 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera | `3ce6e8b` | Resuelta  |
 | 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera |           | Resuelta  |
+|     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    |           | Resuelta  |
 |             |                                           |                       |           |           |
 
 ---

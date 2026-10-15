@@ -268,6 +268,22 @@ Se ha cambiado el orden a  `public static final` y se ha renombrado la variable 
 
 ---
 
+### Disconformidades 19 y 20 — `java:S100`
+
+**Localización:** `src/juego/geometria/Punto.java`, líneas 51 y 82  
+**Responsable:** Diego Sánchez Cano  
+
+**Problema detectado**
+Rename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.
+
+Los métodos `Adyacente` y `situacion_relativa` no siguen la convención de nomenclatura estándar de Java, camelCase.
+
+**Solución adoptada**
+Se han renombrado los métodos a `adyacente` y `situacionRelativa`.
+
+---
+
+
 ## 5. Resumen de las correcciones
 
 |          Nº | Regla Sonar                               | Responsable           | Commit    | Resultado |
@@ -285,7 +301,8 @@ Se ha cambiado el orden a  `public static final` y se ha renombrado la variable 
 | 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera |           | Resuelta  |
 |     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    | b7ab360   | Resuelta  |
 |          17 | `java:S1144`                              | Diego Sánchez Cano    | 7f69dbd   | Resuelta  |
-|     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    |           | Resuelta  |
+|     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    | 39c4126   | Resuelta  |
+|     19 y 20 | `java:S100`                               | Diego Sánchez Cano    |           | Resuelta  |
 
 ---
 

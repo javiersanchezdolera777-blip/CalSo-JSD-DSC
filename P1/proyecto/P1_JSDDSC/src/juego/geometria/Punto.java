@@ -46,7 +46,7 @@ public class Punto {
 	/** Devuelve un nuevo objeto Posicion que representa el valor de la posición
 	 *  adyacente a la instancia actual en la dirección pasada como parámetro.
 	 */
-	public Punto Adyacente(Direccion direccion) {
+	public Punto adyacente(Direccion direccion) {
 
 		switch (direccion) {
 		case DERECHA:
@@ -70,14 +70,14 @@ public class Punto {
 	 */
 	public Boolean isAdyacente(Punto otra, Direccion direccion) {
 
-	    return otra.equals(this.Adyacente(direccion));
+	    return otra.equals(this.adyacente(direccion));
 	}
 
 	/**
 	 * Devuelve la situación relativa de la instancia actual respecto a la posición que se pasa como parámetro.
 	 * En el caso de no ser posiciones adyacentes el valor de retorno es null. 
 	 */
-	public Direccion situacion_relativa(Punto otra){
+	public Direccion situacionRelativa(Punto otra){
 	    int difX = Math.abs(x - otra.x);
 	    int difY = Math.abs(y - otra.y);
 

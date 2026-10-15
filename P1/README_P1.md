@@ -244,7 +244,7 @@ Se ha eliminado las líneas de importación redundantes para mantener el código
 ---
 ### Disconformidad 17 — `java:S1144`
 
-**Localización:** `src/juego/geometria/Punto.java`  
+**Localización:** `src/juego/geometria/Punto.java` , línea 116
 **Responsable:** Diego Sánchez Cano  
 
 **Problema detectado**
@@ -253,6 +253,18 @@ SonarQube detecta que el método privado `distancia` nunca es invocado dentro de
 
 **Solución adoptada**
 Se ha eliminado completamente el método `distancia` del código para mejorar la legibilidad y el mantenimiento.
+
+---
+### Disconformidades 21 y 18 — `java:S1124` y `java:S115`
+
+**Localización:** `src/juego/geometria/Punto.java`, línea 11  
+**Responsable:** Diego Sánchez Cano  
+
+**Problema detectado**
+SonarQube indica que los modificadores no siguen el orden recomendado por la especificación de Java (`final static`) y que el nombre de la constante (`defaultValue`) no sigue el formato en mayúsculas esperado para constantes.
+
+**Solución adoptada**
+Se ha cambiado el orden a  `public static final` y se ha renombrado la variable a `DEFAULT_VALUE` para cumplir con las convenciones de Java.
 
 ---
 
@@ -272,7 +284,8 @@ Se ha eliminado completamente el método `distancia` del código para mejorar la
 | 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera | `3ce6e8b` | Resuelta  |
 | 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera |           | Resuelta  |
 |     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    | b7ab360   | Resuelta  |
-|          17 | `java:S1144`                              | Diego Sánchez Cano    |           | Resuelta  |
+|          17 | `java:S1144`                              | Diego Sánchez Cano    | 7f69dbd   | Resuelta  |
+|     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    |           | Resuelta  |
 
 ---
 

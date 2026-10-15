@@ -9,6 +9,7 @@ public class circulo {
 
     public circulo(Punto centroIni, int radioIni){
         radio = radioIni;
+        centro = centroIni;
     }
 
     public circulo(){

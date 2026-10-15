@@ -283,6 +283,23 @@ Se han renombrado los métodos a `adyacente` y `situacionRelativa`.
 
 ---
 
+|  24 | `java:S1172` | `Circulo.java` |  10 | Remove this unused method parameter "centroIni". |
+| --: | ------------ | -------------- | --: | ------------------------------------------------ |
+
+### Disconformidad 24 — `java:S1172`
+
+**Localización:** `src/juego/geometria/Punto.java`, línea 10
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Remove this unused method parameter "centroIni".
+SonarQube advierte que el parámetro 'centroIni' se le pasa al constructor pero no se utiliza en el cuerpo del método.
+
+**Solución adoptada**
+He añadido 'centro = centroIni' dentro del constructor, al igual que con 'radioIni', que ya estaba.
+
+---
 
 ## 5. Resumen de las correcciones
 
@@ -298,11 +315,13 @@ Se han renombrado los métodos a `adyacente` y `situacionRelativa`.
 |          26 | `java:S2201`                              | Javier Sánchez Dólera | `257e07d` | Resuelta  |
 |      9 y 10 | `java:S2184`                              | Javier Sánchez Dólera | `19a4354` | Resuelta  |
 | 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera | `3ce6e8b` | Resuelta  |
-| 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera |           | Resuelta  |
-|     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    | b7ab360   | Resuelta  |
-|          17 | `java:S1144`                              | Diego Sánchez Cano    | 7f69dbd   | Resuelta  |
-|     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    | 39c4126   | Resuelta  |
-|     19 y 20 | `java:S100`                               | Diego Sánchez Cano    |           | Resuelta  |
+| 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera | `efb6ec9` | Resuelta  |
+|     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    | `b7ab360` | Resuelta  |
+|          17 | `java:S1144`                              | Diego Sánchez Cano    | `7f69dbd` | Resuelta  |
+|     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    | `39c4126` | Resuelta  |
+|     19 y 20 | `java:S100`                               | Diego Sánchez Cano    | `6f1f399` | Resuelta  |
+|          24 | `java:S1172`                              | Javier Sánchez Dólera |           | Resuelta  |
+|             |                                           |                       |           |           |
 
 ---
 

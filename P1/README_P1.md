@@ -242,6 +242,20 @@ Problema 2. Remove this unused import 'java.util.Random'.
 Se ha eliminado las líneas de importación redundantes para mantener el código limpio y cumplir con las convenciones del lenguaje.
 
 ---
+### Disconformidad 17 — `java:S1144`
+
+**Localización:** `src/juego/geometria/Punto.java`  
+**Responsable:** Diego Sánchez Cano  
+
+**Problema detectado**
+Remove this unused private "distancia" method.
+SonarQube detecta que el método privado `distancia` nunca es invocado dentro de la clase, constituyendo código muerto.
+
+**Solución adoptada**
+Se ha eliminado completamente el método `distancia` del código para mejorar la legibilidad y el mantenimiento.
+
+---
+
 ## 5. Resumen de las correcciones
 
 |          Nº | Regla Sonar                               | Responsable           | Commit    | Resultado |
@@ -257,8 +271,8 @@ Se ha eliminado las líneas de importación redundantes para mantener el código
 |      9 y 10 | `java:S2184`                              | Javier Sánchez Dólera | `19a4354` | Resuelta  |
 | 11, 15 y 18 | `java:S1201`, `java:S1905` y `java:S1206` | Javier Sánchez Dólera | `3ce6e8b` | Resuelta  |
 | 13, 14 y 22 | `java:S2975`, `java:S108` y `java:S2225`  | Javier Sánchez Dólera |           | Resuelta  |
-|     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    |           | Resuelta  |
-|             |                                           |                       |           |           |
+|     16 y 27 | `java:S1128`                              | Diego Sánchez Cano    | b7ab360   | Resuelta  |
+|          17 | `java:S1144`                              | Diego Sánchez Cano    |           | Resuelta  |
 
 ---
 

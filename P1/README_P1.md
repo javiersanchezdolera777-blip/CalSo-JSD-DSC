@@ -282,13 +282,9 @@ Los métodos `Adyacente` y `situacion_relativa` no siguen la convención de nome
 Se han renombrado los métodos a `adyacente` y `situacionRelativa`.
 
 ---
-
-|  24 | `java:S1172` | `Circulo.java` |  10 | Remove this unused method parameter "centroIni". |
-| --: | ------------ | -------------- | --: | ------------------------------------------------ |
-
 ### Disconformidad 24 — `java:S1172`
 
-**Localización:** `src/juego/geometria/Punto.java`, línea 10
+**Localización:** `src/juego/geometria/Circulo.java`, línea 10
 **Responsable:** Javier Sánchez Dólera
 
 **Problema detectado**
@@ -300,7 +296,20 @@ SonarQube advierte que el parámetro 'centroIni' se le pasa al constructor pero 
 He añadido 'centro = centroIni' dentro del constructor, al igual que con 'radioIni', que ya estaba.
 
 ---
+### Disconformidad 25 — `java:S101`
 
+**Localización:** `src/juego/geometria/Circulo.java`, línea 3
+**Responsable:** Javier Sánchez Dólera
+
+**Problema detectado**
+
+Rename this class name to match the regular expression '[a-zA-Z0-9]*$'.
+SonarQube dice que cambie el nombre de la clase 'circulo' para cumplir con la expresión regular, eso es porque la letra inicial estaba en minúscula.
+
+**Solución adoptada**
+He cambiado el nombre de la clase 'circulo' por 'Circulo'.
+
+---
 ## 5. Resumen de las correcciones
 
 |          Nº | Regla Sonar                               | Responsable           | Commit    | Resultado |
@@ -320,8 +329,8 @@ He añadido 'centro = centroIni' dentro del constructor, al igual que con 'radio
 |          17 | `java:S1144`                              | Diego Sánchez Cano    | `7f69dbd` | Resuelta  |
 |     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    | `39c4126` | Resuelta  |
 |     19 y 20 | `java:S100`                               | Diego Sánchez Cano    | `6f1f399` | Resuelta  |
-|          24 | `java:S1172`                              | Javier Sánchez Dólera |           | Resuelta  |
-|             |                                           |                       |           |           |
+|          24 | `java:S1172`                              | Javier Sánchez Dólera | `5c94616` | Resuelta  |
+|          25 | `java:S101`                               | Javier Sánchez Dólera |           | Resuelta  |
 
 ---
 
@@ -351,14 +360,14 @@ El proyecto incluido en esta carpeta contiene las modificaciones correspondiente
 
 ## 8. Comprobación de la entrega
 
-- [ ] El nombre del proyecto sigue el formato establecido: `P1_JSDDSC`.
-- [ ] Se identifican los dos miembros del grupo.
-- [ ] Se incluye la captura del análisis inicial.
-- [ ] Se han documentado todas las disconformidades inicialmente detectadas.
-- [ ] Cada solución está asociada a un commit identificable en `main`.
-- [ ] Se identifica qué miembro del grupo realizó cada corrección.
-- [ ] Los dos miembros han participado mediante commits propios.
-- [ ] Se incluye la captura del análisis final.
-- [ ] La captura final permite comprobar que no quedan disconformidades.
-- [ ] Se ha incorporado el proyecto Eclipse final dentro de `P1/proyecto/`.
-- [ ] El proyecto final corresponde al código analizado en la captura final.
+- [x] El nombre del proyecto sigue el formato establecido: `P1_JSDDSC`.
+- [x] Se identifican los dos miembros del grupo.
+- [x] Se incluye la captura del análisis inicial.
+- [x] Se han documentado todas las disconformidades inicialmente detectadas.
+- [x] Cada solución está asociada a un commit identificable en `main`.
+- [x] Se identifica qué miembro del grupo realizó cada corrección.
+- [x] Los dos miembros han participado mediante commits propios.
+- [x] Se incluye la captura del análisis final.
+- [x] La captura final permite comprobar que no quedan disconformidades.
+- [x] Se ha incorporado el proyecto Eclipse final dentro de `P1/proyecto/`.
+- [x] El proyecto final corresponde al código analizado en la captura final.

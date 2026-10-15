@@ -15,8 +15,8 @@ Antes de realizar ninguna modificación sobre el código proporcionado se ha eje
 
 ### Captura inicial
 
+![Análisis final de SonarQube for Eclipse](imagenes/sonar_final.png)
 
-![[sonar_inicial.png]]
 ---
 
 ## 3. Disconformidades detectadas
@@ -330,7 +330,7 @@ He cambiado el nombre de la clase 'circulo' por 'Circulo'.
 |     21 y 18 | `java:S1124` y `java:S115`                | Diego Sánchez Cano    | `39c4126` | Resuelta  |
 |     19 y 20 | `java:S100`                               | Diego Sánchez Cano    | `6f1f399` | Resuelta  |
 |          24 | `java:S1172`                              | Javier Sánchez Dólera | `5c94616` | Resuelta  |
-|          25 | `java:S101`                               | Javier Sánchez Dólera |           | Resuelta  |
+|          25 | `java:S101`                               | Javier Sánchez Dólera | `f73c4af` | Resuelta  |
 
 ---
 

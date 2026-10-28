@@ -8,7 +8,7 @@ public final class Energy {
     }
     
     public static Energy of(int units) {
-        if (units < 0) 
+        if (units <= 0) 
             throw new IllegalArgumentException("Energy must be positive");
         return new Energy(units);
     }

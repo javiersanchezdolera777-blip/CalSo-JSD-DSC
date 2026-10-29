@@ -6,7 +6,7 @@ public final class CleaningProgramByEnergyComparator implements Comparator<Clean
     
     @Override
     public int compare(CleaningProgram first, CleaningProgram second) {
-        int byEnergy = Integer.compare(second.getEnergy().getValue(), first.getEnergy().getValue());
+        int byEnergy = Integer.compare(first.getEnergy().getValue(), second.getEnergy().getValue());  // cambiamos el orden de las variables 'first' y 'second'
         return byEnergy != 0 ? byEnergy : first.getId().compareTo(second.getId());
     }
 }

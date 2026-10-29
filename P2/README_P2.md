@@ -443,12 +443,16 @@ Una prueba que pasa sin comprobar correctamente el resultado esperado no es evid
 
 ### Casos de prueba
 
-| ID    | Clase  | Condición y resultado esperado                                                                                       | Método JUnit                                                                |
-| ----- | ------ | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| CP-01 | Energy | Crear energía con valor 0 límite. Esperado: lanza `IllegalArgumentException`                                         | `testGivenEnergy0WhenCreatingEnergyThenThrowsIllegalArgumentException`      |
-| CP-02 | Energy | Crear energía con valor válido 10. Esperado: almacena el valor y `getValue()` devuelve 10                            | `testGivenEnergy10WhenCreatingEnergyThenStoresValue10`                      |
-| CP-03 | Energy | Crear energía con valor negativo -1. Esperado: lanza `IllegalArgumentException`                                      | `testGivenEnergyMinus1WhenCreatingEnergyThenThrowsIllegalArgumentException` |
-| CP-04 | Energy | Comparar dos instancias de energía diferentes con el mismo valor 10. Esperado: son iguales (`equals` devuelve true). | `testGivenTwoEnergyValues10WhenComparingThenTheyAreEqual`                   |
+| ID    | Clase           | Condición y resultado esperado                                                                                       | Método JUnit                                                                |
+| ----- | --------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| CP-01 | Energy          | Crear energía con valor 0 límite. Esperado: lanza `IllegalArgumentException`                                         | `testGivenEnergy0WhenCreatingEnergyThenThrowsIllegalArgumentException`      |
+| CP-02 | Energy          | Crear energía con valor válido 10. Esperado: almacena el valor y `getValue()` devuelve 10                            | `testGivenEnergy10WhenCreatingEnergyThenStoresValue10`                      |
+| CP-03 | Energy          | Crear energía con valor negativo -1. Esperado: lanza `IllegalArgumentException`                                      | `testGivenEnergyMinus1WhenCreatingEnergyThenThrowsIllegalArgumentException` |
+| CP-04 | Energy          | Comparar dos instancias de energía diferentes con el mismo valor 10. Esperado: son iguales (`equals` devuelve true). | `testGivenTwoEnergyValues10WhenComparingThenTheyAreEqual`                   |
+| CP-05 | CleaningProduct | Comprobar String de WATER. Esperado: "agua"                                                                          | `testGivenWaterWhenToStringThenReturnsAgua`                                 |
+| CP-06 | CleaningProduct | Comprobar String de SOAP. Esperado: "jabón"                                                                          | `testGivenSoapWhenToStringThenReturnsJabon`                                 |
+| CP-07 | CleaningProduct | Comprobar String de WAX. Esperado: "cera"                                                                            | `testGivenWaxWhenToStringThenReturnsCera`                                   |
+| CP-08 | CleaningProduct | Comprobar String de GLASS_CLEANER. Esperado: "limpiacristales"                                                       | `testGivenGlassCleanerWhenToStringThenReturnsLimpiacristales`               |
 
 ### Defectos detectados y corregidos
 
@@ -456,6 +460,7 @@ Una prueba que pasa sin comprobar correctamente el resultado esperado no es evid
 | ------ | ---------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | DEF-01 | CP-01                        | Esperado: Lanza `IllegalArgumentException`. Observado: Instanciaba el objeto aceptando 0 como válido.       | Causa: La condición original permitía el 0 (`< 0`). Corrección: Se ha cambiado a `<= 0` en el método `public static Energy of(int units)` de `Energy.java`                                                                                                                                                                                                                    | `bae0b562beec45d0371fad7499390b2590c33bed` |
 | DEF-02 | CP-04                        | Son iguales (`equals` devuelve `true`). Observado: Se evaluaban como distintos (`equals` devolvía `false`). | Causa: Los métodos `equals()` y `hashCode()` estaban implementados incorrectamente para comparar referencias de memoria (`return this == other;`) en lugar del contenido del objeto. Corrección: Se han modificado ambos métodos en `Energy.java` para que evalúen la igualdad y calculen el hash basándose estrictamente en el atributo numérico de las unidades de energía. | `9406512ada7d3b46fba36e3e6e41f0cc4dfdfc8e` |
+| DEF-03 | CP-08                        | Esperado: Devuelve "limpiacristales". Observado: Devolvía "cristales".                                      | El constructor del enum 'GLASS_CLEANER' recibía un string incorrecto. Corrección: he cambiado 'cristales' por 'limpiacristales' en `CleaningProduct.java`                                                                                                                                                                                                                     | `7a11bfcd1ddede23ff6fbd8a59aa2ad7369f02dc` |
 
 ### Suplantador y desarrollo incremental
 

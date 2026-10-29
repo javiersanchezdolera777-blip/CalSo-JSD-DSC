@@ -1,4 +1,4 @@
-package com.caso.robot.domain.model;
+package com.calso.robot.domain.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

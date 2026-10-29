@@ -22,7 +22,7 @@ public final class CleaningProgram {
         
         this.id = id; 
         this.name = name; 
-        this.requirements = requirements;
+        this.requirements = new java.util.HashMap<>(requirements);  // cambiamos la asignación directa del mapa por una copia
     }
     
     public String getId() { 
@@ -38,16 +38,25 @@ public final class CleaningProgram {
     }
     
     public Map<CleaningProduct,Integer> getRequirements() { 
-        return requirements; 
+    	return java.util.Collections.unmodifiableMap(requirements); // protegemos el método para que nadie puede borrar cosas al pedirlo 
     }
     
+    
+    // Creamos de nuevo los métodos equals y hashCode (utilizando solo el id, quitando el resto de atributos
     @Override
-    public boolean equals(Object other) {
-        return other instanceof CleaningProgram p && name.equals(p.name);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CleaningProgram other = (CleaningProgram) obj;
+		return Objects.equals(id, other.id);
+	}
     
     @Override
-    public int hashCode() { 
-        return name.hashCode(); 
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 }

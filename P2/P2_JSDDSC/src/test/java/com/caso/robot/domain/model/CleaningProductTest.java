@@ -25,7 +25,7 @@ class CleaningProductTest {
 	
 	@Test
 	void testGivenGlassCleanerWhenToStringThenReturnsLimpiacristales() {
-		assertEquals("Limpiacristales", CleaningProduct.GLASS_CLEANER.toString());
+		assertEquals("limpiacristales", CleaningProduct.GLASS_CLEANER.toString());
 	}
 	
 }

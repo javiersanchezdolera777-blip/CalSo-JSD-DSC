@@ -2,6 +2,8 @@ package com.calso.robot.application.usecases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Map;
 
@@ -28,5 +30,32 @@ class ExecuteCleaningProgramUseCaseTest {
         assertTrue(result.executed());
         assertTrue(result.missingProducts().isEmpty());
         assertEquals(0, inventory.available(CleaningProduct.WATER));
+    }
+    @Test
+    void testGivenWater1WhenExecutingProgramRequiringWater3ThenReportsWater2MissingAndPreservesStock() {
+
+        StubCleaningInventory inventory = new StubCleaningInventory(
+                Map.of(CleaningProduct.WATER, 1));
+
+        CleaningProgram program = new CleaningProgram(
+                "P2",
+                "Basic cleaning",
+                Energy.of(10),
+                Map.of(CleaningProduct.WATER, 3));
+
+        ExecuteCleaningProgramUseCase useCase =
+                new ExecuteCleaningProgramUseCase(inventory);
+
+        ExecutionResult result = useCase.execute(program);
+
+        assertAll(
+                () -> assertFalse(result.executed()),
+                () -> assertEquals(
+                        Map.of(CleaningProduct.WATER, 2),
+                        result.missingProducts()),
+                () -> assertEquals(
+                        1,
+                        inventory.available(CleaningProduct.WATER))
+        );
     }
 }

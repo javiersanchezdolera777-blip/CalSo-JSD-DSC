@@ -19,7 +19,7 @@ class ExecuteCleaningProgramUseCaseTest {
     void testGivenWater2WhenExecutingProgramRequiringWater2ThenExecutesAndConsumesWater2() {
         StubCleaningInventory inventory = new StubCleaningInventory(Map.of(CleaningProduct.WATER, 2));
         CleaningProgram program = new CleaningProgram(
-                "P1",
+                "CP-08",
                 "Basic cleaning",
                 Energy.of(10),
                 Map.of(CleaningProduct.WATER, 2));
@@ -34,20 +34,10 @@ class ExecuteCleaningProgramUseCaseTest {
     @Test
     void testGivenWater1WhenExecutingProgramRequiringWater3ThenReportsWater2MissingAndPreservesStock() {
 
-        StubCleaningInventory inventory = new StubCleaningInventory(
-                Map.of(CleaningProduct.WATER, 1));
-
-        CleaningProgram program = new CleaningProgram(
-                "P2",
-                "Basic cleaning",
-                Energy.of(10),
-                Map.of(CleaningProduct.WATER, 3));
-
-        ExecuteCleaningProgramUseCase useCase =
-                new ExecuteCleaningProgramUseCase(inventory);
-
+        StubCleaningInventory inventory = new StubCleaningInventory(Map.of(CleaningProduct.WATER, 1));
+        CleaningProgram program = new CleaningProgram( "CP-09","Basic cleaning",Energy.of(10), Map.of(CleaningProduct.WATER, 3));
+        ExecuteCleaningProgramUseCase useCase = new ExecuteCleaningProgramUseCase(inventory);
         ExecutionResult result = useCase.execute(program);
-
         assertAll(
                 () -> assertFalse(result.executed()),
                 () -> assertEquals(
@@ -57,5 +47,16 @@ class ExecuteCleaningProgramUseCaseTest {
                         1,
                         inventory.available(CleaningProduct.WATER))
         );
+    }
+    @Test
+    void testGivenWater3WhenExecutingProgramRequiringWater2ThenExecutesAndLeavesWater1() {
+        StubCleaningInventory inventory = new StubCleaningInventory(Map.of(CleaningProduct.WATER, 3));
+        CleaningProgram program = new CleaningProgram("CP-10", "Basic cleaning", Energy.of(10), Map.of(CleaningProduct.WATER, 2));
+        ExecuteCleaningProgramUseCase useCase = new ExecuteCleaningProgramUseCase(inventory);
+        ExecutionResult result = useCase.execute(program);
+        
+        assertTrue(result.executed());
+        assertTrue(result.missingProducts().isEmpty());
+        assertEquals(1, inventory.available(CleaningProduct.WATER));
     }
 }

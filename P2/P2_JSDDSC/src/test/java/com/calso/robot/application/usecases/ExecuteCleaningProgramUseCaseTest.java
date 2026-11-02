@@ -107,4 +107,20 @@ class ExecuteCleaningProgramUseCaseTest {
             () -> assertEquals(0, inventory.available(CleaningProduct.WAX))
         );
     }
+    @Test
+    void testGivenProgramWithoutProductsWhenExecutingProgramThenExecutesWithoutConsumingInventory() {
+        StubCleaningInventory inventory = new StubCleaningInventory(
+            Map.of(CleaningProduct.WATER,0,CleaningProduct.SOAP, 0, CleaningProduct.GLASS_CLEANER,0, CleaningProduct.WAX,0));
+        CleaningProgram program = new CleaningProgram("CP-13","Cleaning without products",Energy.of(10),Map.of());
+        ExecuteCleaningProgramUseCase useCase= new ExecuteCleaningProgramUseCase(inventory);
+        ExecutionResult result = useCase.execute(program);
+        assertAll(
+            () -> assertTrue(result.executed()),
+            () -> assertTrue(result.missingProducts().isEmpty()),
+            () -> assertEquals(0, inventory.available(CleaningProduct.WATER)),
+            () -> assertEquals(0, inventory.available(CleaningProduct.SOAP)),
+            () -> assertEquals(0, inventory.available(CleaningProduct.GLASS_CLEANER)),
+            () -> assertEquals(0, inventory.available(CleaningProduct.WAX))
+        );
+    }
 }

@@ -18,12 +18,7 @@ class ExecuteCleaningProgramUseCaseTest {
     @Test
     void testGivenWater2WhenExecutingProgramRequiringWater2ThenExecutesAndConsumesWater2() {
         StubCleaningInventory inventory = new StubCleaningInventory(Map.of(CleaningProduct.WATER, 2));
-        CleaningProgram program = new CleaningProgram(
-                "CP-08",
-                "Basic cleaning",
-                Energy.of(10),
-                Map.of(CleaningProduct.WATER, 2));
-
+        CleaningProgram program = new CleaningProgram("CP-08", "Basic cleaning",Energy.of(10), Map.of(CleaningProduct.WATER, 2));
         ExecuteCleaningProgramUseCase useCase = new ExecuteCleaningProgramUseCase(inventory);
         ExecutionResult result = useCase.execute(program);
 
@@ -58,5 +53,33 @@ class ExecuteCleaningProgramUseCaseTest {
         assertTrue(result.executed());
         assertTrue(result.missingProducts().isEmpty());
         assertEquals(1, inventory.available(CleaningProduct.WATER));
+    }
+    @Test
+    void testGivenWater1AndSop0AndCleaner2WhenExecutingProgramRequiringWater3AndSoap2AndCleaner3ThenReportsBothMissingAndPreservesStock() {
+        StubCleaningInventory inventory = new StubCleaningInventory(Map.of(CleaningProduct.WATER, 1,CleaningProduct.SOAP, 0, CleaningProduct.GLASS_CLEANER, 2)
+        );
+
+        CleaningProgram program = new CleaningProgram(
+                "CP-11",
+                "Cleaning requiring water and soap",
+                Energy.of(10),
+                Map.of(CleaningProduct.WATER, 3, CleaningProduct.SOAP, 2, CleaningProduct.GLASS_CLEANER,3)
+        );
+        ExecuteCleaningProgramUseCase useCase =new ExecuteCleaningProgramUseCase(inventory);
+        ExecutionResult result = useCase.execute(program);
+        assertAll(
+                () -> assertFalse(result.executed()),
+                () -> assertEquals(
+                        Map.of(
+                                CleaningProduct.WATER, 2,
+                                CleaningProduct.SOAP, 2,
+                                CleaningProduct.GLASS_CLEANER, 1
+                        ),
+                        result.missingProducts()
+                ),
+                () -> assertEquals(1, inventory.available(CleaningProduct.WATER)),
+                () -> assertEquals(0, inventory.available(CleaningProduct.SOAP)),
+                () -> assertEquals(2, inventory.available(CleaningProduct.GLASS_CLEANER))
+        );
     }
 }

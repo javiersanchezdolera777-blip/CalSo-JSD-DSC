@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
+import java.util.EnumMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -80,6 +80,31 @@ class ExecuteCleaningProgramUseCaseTest {
                 () -> assertEquals(1, inventory.available(CleaningProduct.WATER)),
                 () -> assertEquals(0, inventory.available(CleaningProduct.SOAP)),
                 () -> assertEquals(2, inventory.available(CleaningProduct.GLASS_CLEANER))
+        );
+    }
+    @Test
+    void testGivenSufficientWaterAndInsufficientWAXWhenExecutingProgramThenRejectsWithoutConsumingWater() {
+        StubCleaningInventory inventory = new StubCleaningInventory(
+            Map.of(CleaningProduct.WATER, 3,CleaningProduct.WAX, 0
+            )
+        );
+        Map<CleaningProduct, Integer> requirements =
+            new EnumMap<>(CleaningProduct.class);
+
+        requirements.put(CleaningProduct.WATER, 2);
+        requirements.put(CleaningProduct.WAX, 1);
+        CleaningProgram program = new CleaningProgram("CP-12", "Cleaning requiring water and wax", Energy.of(10),requirements);
+        ExecuteCleaningProgramUseCase useCase= new ExecuteCleaningProgramUseCase(inventory);
+        ExecutionResult result = useCase.execute(program);
+        
+        assertAll(
+            () -> assertFalse(result.executed()),
+            () -> assertEquals(
+                Map.of(CleaningProduct.WAX, 1),
+                result.missingProducts()
+            ),
+            () -> assertEquals(3, inventory.available(CleaningProduct.WATER)),
+            () -> assertEquals(0, inventory.available(CleaningProduct.WAX))
         );
     }
 }

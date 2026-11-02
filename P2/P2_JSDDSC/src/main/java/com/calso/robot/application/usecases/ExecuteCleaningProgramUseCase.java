@@ -21,23 +21,19 @@ public final class ExecuteCleaningProgramUseCase implements IExecuteCleaningProg
         Objects.requireNonNull(program, "program");
         Map<CleaningProduct,Integer> missing = new EnumMap<>(CleaningProduct.class);
         
-     // PRIMER RECORRIDO: comprobar existencias.
+     //Solución error: Hacer dos bucles 
         for (var requirement : program.getRequirements().entrySet()) {
             CleaningProduct product = requirement.getKey();
             int required = requirement.getValue();
             int available = inventory.available(product);
-
             if (available < required) {
                 missing.put(product, required - available);
             }
         }
-
-        // Si falta algún producto, rechazamos la ejecución.
+        
         if (!missing.isEmpty()) {
             return new ExecutionResult(false, missing);
         }
-
-        // SEGUNDO RECORRIDO: consumir existencias.
         for (var requirement : program.getRequirements().entrySet()) {
             inventory.consume(requirement.getKey(), requirement.getValue());
         }

@@ -21,17 +21,23 @@ public final class ExecuteCleaningProgramUseCase implements IExecuteCleaningProg
         Objects.requireNonNull(program, "program");
         Map<CleaningProduct,Integer> missing = new EnumMap<>(CleaningProduct.class);
         
+     //Solución error: Hacer dos bucles 
         for (var requirement : program.getRequirements().entrySet()) {
             CleaningProduct product = requirement.getKey();
             int required = requirement.getValue();
             int available = inventory.available(product);
-            if (available <= required && required > 0) {
-                missing.put(product, required);
-            } else {
-                inventory.consume(product, required);
+            if (available < required) {
+                missing.put(product, required - available);
             }
         }
         
-        return new ExecutionResult(missing.isEmpty(), missing);
+        if (!missing.isEmpty()) {
+            return new ExecutionResult(false, missing);
+        }
+        for (var requirement : program.getRequirements().entrySet()) {
+            inventory.consume(requirement.getKey(), requirement.getValue());
+        }
+
+        return new ExecutionResult(true, Map.of());
     }
 }

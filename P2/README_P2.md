@@ -439,7 +439,9 @@ Una prueba que pasa sin comprobar correctamente el resultado esperado no es evid
 
 ### Integrantes, responsabilidades y enlaces de integración
 
-*Completar.*
+Javier Sánchez Dólera: bloque de Dominio y Comparador. Rama: `feature/dominio-comparador`
+
+Diego Sánchez Cano: bloque de Suplantador y Caso de Uso. Rama: 
 
 ### Casos de prueba
 

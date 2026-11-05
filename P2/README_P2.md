@@ -441,7 +441,7 @@ Una prueba que pasa sin comprobar correctamente el resultado esperado no es evid
 
 Javier Sánchez Dólera: bloque de Dominio y Comparador. Rama: `feature/dominio-comparador`
 
-Diego Sánchez Cano: bloque de Suplantador y Caso de Uso. Rama: 
+Diego Sánchez Cano: bloque de Suplantador y Caso de Uso. Rama: `suplantador-casodeuso`
 
 ### Casos de prueba
 
@@ -476,7 +476,7 @@ Diego Sánchez Cano: bloque de Suplantador y Caso de Uso. Rama:
 | CP-19 | ExecuteCleaningProgramUseCase     | Agua disponible = 1, jabón = 0, limpia crsitales=2. Se requieren 3, 2 y 3 respectivamente. Rechaza la ejecución, informa de ambos faltantes y conserva el inventario. | testGivenWater1AndSop0AndCleaner2WhenExecutingProgramRequiringWater3AndSoap2AndCleaner3ThenReportsBothMissingAndPreservesStock |
 | CP-20 | ExecuteCleaningProgramUseCase     | Hay agua suficiente, pero falta cera. La ejecución se rechaza, informa de una unidad de cera faltante y mantiene intactas las existencias.                            | testGivenSufficientWaterAndInsufficientWAXWhenExecutingProgramThenRejectsWithoutConsumingWater                                 |
 | CP-21 | ExecuteCleaningProgramUseCase     | El programa no requiere productos. Se ejecuta correctamente, mantiene intactas las existencias.                                                                       | testGivenProgramWithoutProductsWhenExecutingProgramThenExecutesWithoutConsumingInventory                                       |
-| CP-21 | ExecuteCleaningProgramUseCase     | El programa requiere cero unidades de agua. Se ejecuta correctamente, no informa de productos faltantes y conserva las existencias.                                   | testGivenZeroProductWhenExecutingProgramThenExecutesWithoutConsumingInventory                                                  |
+| CP-22 | ExecuteCleaningProgramUseCase     | El programa requiere cero unidades de agua. Se ejecuta correctamente, no informa de productos faltantes y conserva las existencias.                                   | testGivenZeroProductWhenExecutingProgramThenExecutesWithoutConsumingInventory                                                  |
 
 ### Defectos detectados y corregidos
 

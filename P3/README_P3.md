@@ -15,9 +15,9 @@ El documento [especificación funcional](docs/ESPECIFICACION.md) es la referenci
 
 Si la práctica es realizada por un único alumno deberá implementar el total de las pruebas de todos los ficheros propuestos para realizar las pruebas y deberá realizar la entrega completa de la práctica. En el caso de grupos formados por dos miembros se deberá seguir el siguiente reparto de responsabilidades:
 
-| Integrante | Caja blanca: métodos de dominio | Caja negra: interfaz |
-|---|---|---|
-| **Alumno 1** | `containsAllRequiredWeapons` y `DojoSearchService.findFirstAvailableDojo`  | Búsqueda de dojos (`/dojos`) |
+| Integrante   | Caja blanca: métodos de dominio                                            | Caja negra: interfaz               |
+| ------------ | -------------------------------------------------------------------------- | ---------------------------------- |
+| **Alumno 1** | `containsAllRequiredWeapons` y `DojoSearchService.findFirstAvailableDojo`  | Búsqueda de dojos (`/dojos`)       |
 | **Alumno 2** | `ReservationDiscountService.findYoungestFighter` y `calculateBestDiscount` | Costes y bonificaciones (`/coste`) |
 
 Cada estudiante es responsable del **diseño, implementación, ejecución, análisis y corrección** de su parte. Ambos deben comprender la integración final, revisar las aportaciones del compañero y garantizar una regresión conjunta.
@@ -25,7 +25,6 @@ Cada estudiante es responsable del **diseño, implementación, ejecución, anál
 ## 3. Actividad 1 · Pruebas de caja blanca
 
 Las pruebas de caja blanca integran **dos técnicas en un mismo proceso**: diseño de caminos independientes y cobertura de condiciones. Estas pruebas deben completarse íntegramente antes de iniciar las pruebas de caja negra.
-
 ### Diseño de caminos independientes
 
 Para cada uno de los dos métodos asignados a cada participante (todos los métodos para los grupos de un único participante) se realizarán los siguinetes pasos:
@@ -121,3 +120,77 @@ El vídeo mostrará la aplicación o las herramientas en funcionamiento y la int
 - [Plantilla del workflow GitHub Actions para cada grupo](dos/GUIA_PRUEBAS.md#plantilla-de-github-actions-para-el-repositorio-del-grupo).
 
 Las fechas de entrega y cualquier instrucción institucional adicional se comunicarán mediante el Aula Virtual
+
+
+## Resolución del grupo
+
+### Identificación
+* **Integrante 1 (Javier Sánchez Dólera):** Caja blanca (`containsAllRequiredWeapons`, `findFirstAvailableDojo`) y Caja negra (Búsqueda `/dojos`). Rama: `feature/p3-javier-busqueda`
+* **Integrante 2 (Diego Sánchez Cano):** Caja blanca (`findYoungestFighter`, `calculateBestDiscount`) y Caja negra (Costes `/coste`). Rama: `feature/p3-diego-costes`
+
+---
+
+### Actividad 1: Caja Blanca
+
+#### Método 1: `containsAllRequiredWeapons`
+**1. Grafo de flujo y Complejidad Ciclomática**
+* **Nodos (N):** 8
+* **Aristas (A):** 8 (1->2, 1->3, 3->4, 3->5, 5->6, 5->8, 6->7, 6->5)
+* **Nodos Predicado:** 4 (tres `if` y un `for`)
+* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 5 (5 caminos base).
+
+**2. Caminos independientes y datos de prueba**
+
+| Método                       | Nodo o camino identificado | Datos de entrada y fecha                                                                           | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
+| ---------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------- | --------------- | ------------------- |
+| `containsAllRequiredWeapons` | C1: 1->2                   | `available = null`, `required = {Cualquier}`                                                       | Lanza `NullPointerException`            |                 |                     |
+| `containsAllRequiredWeapons` | C2: 1->3->4                | `available = {}`, `required = null`                                                                | Lanza `NullPointerException`            |                 |                     |
+| `containsAllRequiredWeapons` | C3: 1->3->5->8             | `available = {Katana}`, `required = {}`                                                            | Devuelve `true`                         |                 |                     |
+| `containsAllRequiredWeapons` | C4: 1->3->5->6->7          | `available = {}`, `required = {Katana}`                                                            | Devuelve `false`                        |                 |                     |
+| `containsAllRequiredWeapons` | C5: 1->3->5->6->5->8       | NO FACTIBLE. Si `available` no está vacío, no evalúa el contenido, iterando hasta devolver `true`. | N/A (Defecto lógico)                    | N/A             | N/A                 |
+
+#### Método 2: `findFirstAvailableDojo`
+**1. Grafo de flujo y Complejidad Ciclomática**
+* **Nodos (N):** 18
+* **Aristas (A):** 19
+* **Nodos Predicado:** 8
+* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 9 (9 caminos base).
+
+**2. Caminos independientes y datos de prueba**
+
+| Método                   | Nodo o camino identificado        | Datos de entrada y fecha                | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
+| ------------------------ | --------------------------------- | --------------------------------------- | --------------------------------------- | --------------- | ------------------- |
+| `findFirstAvailableDojo` | C1: Excepción dojos null          | `dojos = null`                          | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C2: Excepción armas null          | `dojos = [], requiredWeapons = null`    | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C3: Excepción reservas null       | `reservations = null`                   | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C4: Excepción fecha null          | `trainingDate = null`                   | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C5: Lista dojos vacía             | `dojos = []`                            | Devuelve `Optional.empty()`             |                 |                     |
+| `findFirstAvailableDojo` | C6: Dojo sin armas                | Dojo 1 sin armas requeridas             | Devuelve `Optional.empty()`             |                 |                     |
+| `findFirstAvailableDojo` | C7: Dojo con armas, sin reservas  | Dojo 1 con armas, `reservations = []`   | Devuelve `Optional.of(dojo1)`           |                 |                     |
+| `findFirstAvailableDojo` | C8: Reserva distinta (ID o Fecha) | Dojo 1, Reserva Dojo 2 o fecha distinta | Devuelve `Optional.of(dojo1)`           |                 |                     |
+| `findFirstAvailableDojo` | C9: Reserva coincide (Ocupado)    | Dojo 1, Reserva Dojo 1, MISMA fecha     | Devuelve `Optional.empty()`             |                 |                     |
+
+#### Cobertura de Condiciones (Método 2: Bucle de reservas)
+
+| Condicion atomica | Caso que evalua verdadero | Caso que evalua falso | Casos adicionales | Justificacion si no es factible |
+| --- | --- | --- | --- | --- |
+| `reservation.dojoId().equals(dojo.id())` | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | C8a: Reserva distinta (Reserva diferente ID dojo) | Ninguno | N/A |
+| `!reservation.trainingDate().equals(trainingDate)` | C8b: Reserva distinta (Reserva mismo ID dojo pero distinta fecha) | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | Ninguno | N/A |
+
+---
+
+### Actividad 2: Caja Negra (Búsqueda /dojos)
+*(Tablas de clases de equivalencia y valores límite pendientes)*
+
+---
+
+### Actividad 3: Defectos y Calidad
+
+#### Defectos detectados y corregidos
+| ID  | Prueba que revela el defecto | Esperado / observado | Causa y corrección | Commit |
+| --- | ---------------------------- | -------------------- | ------------------ | ------ |
+|     |                              |                      |                    |        |
+
+#### Indicadores de calidad
+*(Tabla de JaCoCo y PIT pendiente)*
+

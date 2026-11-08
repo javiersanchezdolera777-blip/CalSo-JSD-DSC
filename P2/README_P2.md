@@ -490,13 +490,11 @@ Diego Sánchez Cano: bloque de Suplantador y Caso de Uso. Rama: `suplantador-cas
 | DEF-06 | CP-14                        | Esperado: número negativo. Observado: número positivo.                                                                  | Causa: el método 'Compare' de CleaningProgram ordenaba de forma descendente. Corrección: he cambiado el orden de las variables 'first' y 'second' para que se hiciera la comparación ascendente.                                                                                                                                                                              | `804ff07d997126ff9b9367ff7458aa41d809f6a7` |
 | DEF-07 | UC-01                        | `executed = true`, stock final = 0 / executed = false                                                                   | Sustituir `<=` por `<` en `ExecuteCleaningProgramUseCase.execute()`.                                                                                                                                                                                                                                                                                                          | 2e7e1de462245829acd0958e0e8a8b7b310771dd   |
 | DEF-08 | CP-17                        | `missingProducts = {WATER=2}`/`missingProducts = {WATER=3}`                                                             | Almacenaba la cantidad total requerida en lugar de las unidades adicionales necesarias. Se corrigió calculando `required - available`.                                                                                                                                                                                                                                        | 5ae5b3ace80c3fe55085801fa94c608e52a74e40   |
-| DEF-09 | CP-20                        | No consumir ningún producto si falta alguno / Se consumían 2 unidades de agua antes de detectar que faltaba jabón.      | El caso de uso comprobaba y consumía cada producto en el mismo recorrido. He separado en 2 bucles para la comprobación de existencias del descuento, realizando el consumo únicamente cuando no hay productos faltantes.                                                                                                                                                      | da1736f64228e144e197258257cc4422725a972f   |
+| DEF-09 | CP-20                        | No consumir ningún producto si falta alguno / Se consumían 2 unidades de agua antes de detectar que faltaba cera.       | El caso de uso comprobaba y consumía cada producto en el mismo recorrido. He separado en 2 bucles para la comprobación de existencias del descuento, realizando el consumo únicamente cuando no hay productos faltantes.                                                                                                                                                      | da1736f64228e144e197258257cc4422725a972f   |
 
 ### Suplantador y desarrollo incremental
 
-*Se ha implementado `StubCleaningInventory` como sustituto de la dependencia `ICleaningInventory` durante las pruebas del caso de uso.
-
-El suplantador permite inicializar las existencias de los productos, consultar las cantidades disponibles y realizar descuentos controlados. Devuelve cero para los productos no registrados y evita que se produzcan existencias negativas, lanzando `IllegalArgumentException` ante descuentos inválidos.
+*El suplantador permite inicializar las existencias de los productos, consultar las cantidades disponibles y realizar descuentos controlados. Devuelve cero para los productos no registrados y evita que se produzcan existencias negativas, lanzando `IllegalArgumentException` ante descuentos inválidos.
 
 Cada instancia mantiene su propio estado independiente.
 
@@ -506,13 +504,13 @@ El desarrollo se ha realizado incrementalmente mediante pruebas JUnit 5, identif
 
 ### Indicadores de calidad
 
-| Herramienta | Resultado obtenido | Evidencia |
-| --- | --- | --- |
-| JUnit 5 | | |
-| JaCoCo (instrucciones y ramas) | | |
-| PIT (mutation coverage y test strength) | | |
-| SonarQube (Quality Gate e incidencias) | | |
+| Herramienta                             | Resultado obtenido                                                                                                                                                                                                          | Evidencia                       |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| JUnit 5                                 | 30 pruebas unitarias; 0 errores, 0 fallos y 0 omitidas; éxito del 100 % (123 ms, según las métricas de pruebas publicadas en SonarQube).                                                                                    | ![[evidencias/JUNIT-test.png]]  |
+| JaCoCo (instrucciones y ramas)          | Instrucciones: **85,3 %** (308/361); ramas: **71,4 %** (30/42); líneas: **84,0 %** (63/75); métodos: **82,6 %** (19/23).                                                                                                    | ![[evidencias/JACOCO-Test.png]] |
+| PIT (mutation coverage y test strength) | Mutation coverage: **76 %** (35/46); test strength: **90 %** (35/39); line coverage: **88 %** (59/67). Se registran 4 mutantes supervivientes y 7 sin cobertura.                                                            | ![[evidencias/PIT-Test.png]]    |
+| SonarQube (Quality Gate e incidencias)  | **Quality Gate aprobado en `main`**. Coverage: **79,5 %**; line coverage: 84,0 %; condition coverage: 71,4 %; 0 bugs; 0 vulnerabilidades; 15 Code Smells (2 Major y 13 Minor); 0,0 % de duplicaciones; 0 Security Hotspots. | ![[evidencias/SONARQUBE.png]]   |
 
-**Commit de `main` analizado:** *completar*.
+**Commit de `main` analizado:** *4a5259aa6dc6540249f92258e86a861ac66cd423*.
 
 **Enlace al vídeo externo (oculto/no listado):** *completar*.

@@ -16,6 +16,7 @@ public final class DojoSearchService {
             Set<Weapon> requiredWeapons,
             List<Reservation> reservations,
             LocalDate trainingDate) {
+    	
         if (dojos == null) {
             throw new NullPointerException("Dojos are required");
         }
@@ -32,24 +33,28 @@ public final class DojoSearchService {
         for (Dojo dojo : dojos) {
             if (containsAllRequiredWeapons(dojo.weapons(), requiredWeapons)) {
                 boolean occupied = false;
+                
                 for (Reservation reservation : reservations) {
                     if (reservation.dojoId().equals(dojo.id())
                             && !reservation.trainingDate().equals(trainingDate)) {
                         occupied = true;
                         break;
                     }
-                }
+                } 
+                
                 if (!occupied) {
                     return Optional.of(dojo);
                 }
             }
         }
+        
         return Optional.empty();
     }
 
     public boolean containsAllRequiredWeapons(
             Set<Weapon> available,
-            Set<Weapon> required) {
+            Set<Weapon> required) 
+   {
         if (available == null) {
             throw new NullPointerException("Available weapons are required");
         }

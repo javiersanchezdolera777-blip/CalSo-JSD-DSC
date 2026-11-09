@@ -25,7 +25,7 @@ public final class ReservationDiscountService {
             if (fighter == null) {
                 throw new NullPointerException("Null fighter");
             }
-            if (youngest == null || fighter.birthDate().isBefore(youngest.birthDate())) {
+            if (youngest == null || fighter.birthDate().isAfter(youngest.birthDate())) {
                 youngest = fighter;
             }
         }
@@ -61,7 +61,7 @@ public final class ReservationDiscountService {
                 int unemploymentPercentage = 0;
                 if (completeYears >= 3) {
                     unemploymentPercentage = 30;
-                } else if (completeYears > 2) {
+                } else if (completeYears >= 2) {
                     unemploymentPercentage = 20;
                 } else if (completeYears >= 1) {
                     unemploymentPercentage = 10;

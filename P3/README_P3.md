@@ -135,11 +135,6 @@ Las fechas de entrega y cualquier instrucción institucional adicional se comuni
 #### Método 1: `containsAllRequiredWeapons`
 **1. Grafo de flujo y Complejidad Ciclomática**
 * **Nodos (N):** 8
-<<<<<<< Updated upstream
-* **Aristas (A):** 8 (1->2, 1->3, 3->4, 3->5, 5->6, 5->8, 6->7, 6->5)
-* **Nodos Predicado:** 4 (tres `if` y un `for`)
-* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 5 (5 caminos base).
-=======
 * **Aristas (A):** 8
 * **Nodos de Salida (S):** 4 (dos `throw` y dos `return`)
 * **Nodos Predicado (P):** 4 (tres `if` y un `for`)
@@ -148,26 +143,16 @@ Cálculo mediante las fórmulas:
 1. **CC = A - N + S + 1** = 8 - 8 + 4 + 1 = **5**
 2. **CC = P + 1** = 4 + 1 = **5**
 *(Complejidad Ciclomática = 5. Identificamos 5 caminos base).*
->>>>>>> Stashed changes
 
 **2. Caminos independientes y datos de prueba**
 
-| Método                       | Nodo o camino identificado | Datos de entrada y fecha                                                                           | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
-| ---------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------- | --------------- | ------------------- |
-| `containsAllRequiredWeapons` | C1: 1->2                   | `available = null`, `required = {Cualquier}`                                                       | Lanza `NullPointerException`            |                 |                     |
-| `containsAllRequiredWeapons` | C2: 1->3->4                | `available = {}`, `required = null`                                                                | Lanza `NullPointerException`            |                 |                     |
-| `containsAllRequiredWeapons` | C3: 1->3->5->8             | `available = {Katana}`, `required = {}`                                                            | Devuelve `true`                         |                 |                     |
-| `containsAllRequiredWeapons` | C4: 1->3->5->6->7          | `available = {}`, `required = {Katana}`                                                            | Devuelve `false`                        |                 |                     |
-| `containsAllRequiredWeapons` | C5: 1->3->5->6->5->8       | NO FACTIBLE. Si `available` no está vacío, no evalúa el contenido, iterando hasta devolver `true`. | N/A (Defecto lógico)                    | N/A             | N/A                 |
-
-<<<<<<< Updated upstream
-#### Método 2: `findFirstAvailableDojo`
-**1. Grafo de flujo y Complejidad Ciclomática**
-* **Nodos (N):** 18
-* **Aristas (A):** 19
-* **Nodos Predicado:** 8
-* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 9 (9 caminos base).
-=======
+| Método                       | Nodo o camino identificado | Datos de entrada y fecha                                                                           | Resultado esperado según especificación | Nombre del test                                                                      | Resultado ejecución                          |
+| ---------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `containsAllRequiredWeapons` | C1: 1->2                   | `available = null`, `required = {Cualquier}`                                                       | Lanza `NullPointerException`            | `testGivenAvailableWeaponsNullWhenCheckingContainsAllThenThrowsNullPointerException` | Superado                                     |
+| `containsAllRequiredWeapons` | C2: 1->3->4                | `available = {}`, `required = null`                                                                | Lanza `NullPointerException`            | `testGivenRequiredWeaponsNullWhenCheckingContainsAllThenThrowsNullPointerException`  | Superado                                     |
+| `containsAllRequiredWeapons` | C3: 1->3->5->8             | `available = {Katana}`, `required = {}`                                                            | Devuelve `true`                         | `testGivenEmptyRequiredWeaponsWhenCheckingContainsAllThenReturnsTrue`                | Superado                                     |
+| `containsAllRequiredWeapons` | C4: 1->3->5->6->7          | `available = {}`, `required = {Katana}`                                                            | Devuelve `false`                        | `testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse`              | Falla inicialmente, superado tras corrección |
+| `containsAllRequiredWeapons` | C5: 1->3->5->6->5->8       | NO FACTIBLE. Si `available` no está vacío, no evalúa el contenido, iterando hasta devolver `true`. | N/A (Defecto lógico)                    | N/A                                                                                  | N/A                                          |
 
 #### Método 2: `findFirstAvailableDojo`
 **1. Grafo de flujo y Complejidad Ciclomática**
@@ -180,35 +165,29 @@ Cálculo mediante las fórmulas:
 1. **CC = A - N + S + 1** = 21 - 18 + 6 + 1 = **10**
 2. **CC = P + 1** = 9 + 1 = **10**
 *(Complejidad Ciclomática = 10. Identificamos 10 caminos base).*
->>>>>>> Stashed changes
 
 **2. Caminos independientes y datos de prueba**
 
-| Método                   | Nodo o camino identificado        | Datos de entrada y fecha                | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
-| ------------------------ | --------------------------------- | --------------------------------------- | --------------------------------------- | --------------- | ------------------- |
-| `findFirstAvailableDojo` | C1: Excepción dojos null          | `dojos = null`                          | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C2: Excepción armas null          | `dojos = [], requiredWeapons = null`    | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C3: Excepción reservas null       | `reservations = null`                   | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C4: Excepción fecha null          | `trainingDate = null`                   | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C5: Lista dojos vacía             | `dojos = []`                            | Devuelve `Optional.empty()`             |                 |                     |
-| `findFirstAvailableDojo` | C6: Dojo sin armas                | Dojo 1 sin armas requeridas             | Devuelve `Optional.empty()`             |                 |                     |
-| `findFirstAvailableDojo` | C7: Dojo con armas, sin reservas  | Dojo 1 con armas, `reservations = []`   | Devuelve `Optional.of(dojo1)`           |                 |                     |
-| `findFirstAvailableDojo` | C8: Reserva distinta (ID o Fecha) | Dojo 1, Reserva Dojo 2 o fecha distinta | Devuelve `Optional.of(dojo1)`           |                 |                     |
-| `findFirstAvailableDojo` | C9: Reserva coincide (Ocupado)    | Dojo 1, Reserva Dojo 1, MISMA fecha     | Devuelve `Optional.empty()`             |                 |                     |
-<<<<<<< Updated upstream
-=======
-| `findFirstAvailableDojo` | C10: Siguiente iteración bucle    | Dojo 1, Ocupado<br>Dojo 2, Libre        | Devuelve `Optional.of(dojo2)`           |                 |                     |
->>>>>>> Stashed changes
+| Método                   | Nodo o camino identificado        | Datos de entrada y fecha                | Resultado esperado según especificación | Nombre del test                                                                      | Resultado ejecución                          |
+| ------------------------ | --------------------------------- | --------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `findFirstAvailableDojo` | C1: Excepción dojos null          | `dojos = null`                          | Lanza `NullPointerException`            | `testGivenNullDojosWhenFindFirstAvailableThenThrowsNullPointerException`             | Superado                                     |
+| `findFirstAvailableDojo` | C2: Excepción armas null          | `dojos = [], requiredWeapons = null`    | Lanza `NullPointerException`            | `testGivenNullRequiredWeaponsWhenFindFirstAvailableThenThrowsNullPointerException`   | Superado                                     |
+| `findFirstAvailableDojo` | C3: Excepción reservas null       | `reservations = null`                   | Lanza `NullPointerException`            | `testGivenNullReservationsWhenFindFirstAvailableThenThrowsNullPointerException`      | Superado                                     |
+| `findFirstAvailableDojo` | C4: Excepción fecha null          | `trainingDate = null`                   | Lanza `NullPointerException`            | `testGivenNullTrainingDateWhenFindFirstAvailableThenThrowsNullPointerException`      | Superado                                     |
+| `findFirstAvailableDojo` | C5: Lista dojos vacía             | `dojos = []`                            | Devuelve `Optional.empty()`             | `testGivenEmptyDojoListWhenFindFirstAvailableThenReturnsEmpty`                       | Superado                                     |
+| `findFirstAvailableDojo` | C6: Dojo sin armas                | Dojo 1 sin armas requeridas             | Devuelve `Optional.empty()`             | `testGivenDojoWithoutRequiredWeaponsWhenFindFirstAvailableThenReturnsEmpty`          | Superado                                     |
+| `findFirstAvailableDojo` | C7: Dojo con armas, sin reservas  | Dojo 1 con armas, `reservations = []`   | Devuelve `Optional.of(dojo1)`           | `testGivenAvailableDojoWithoutReservationsWhenFindFirstAvailableThenReturnsDojo`     | Superado                                     |
+| `findFirstAvailableDojo` | C8: Reserva distinta (ID o Fecha) | Dojo 1, Reserva Dojo 2 o fecha distinta | Devuelve `Optional.of(dojo1)`           | `testGivenDojoWithReservationOnDifferentDateWhenFindFirstAvailableThenReturnsDojo`   | Superado                                     |
+| `findFirstAvailableDojo` | C9: Reserva coincide (Ocupado)    | Dojo 1, Reserva Dojo 1, MISMA fecha     | Devuelve `Optional.empty()`             | `testGivenDojoWithReservationOnSameDateWhenFindFirstAvailableThenReturnsEmpty`       | Falla inicialmente, superado tras corrección |
+| findFirstAvailableDojo   | C10: Siguiente iteración bucle    | Dojo 1, Ocupado<br>Dojo 2, Libre        | Devuelve `Optional.of(dojo2)`           | `testGivenFirstDojoOccupiedAndSecondFreeWhenFindFirstAvailableThenReturnsSecondDojo` | Falla inicialmente, superado tras corrección |
 
 #### Cobertura de Condiciones (Método 2: Bucle de reservas)
 
-| Condicion atomica | Caso que evalua verdadero | Caso que evalua falso | Casos adicionales | Justificacion si no es factible |
-| --- | --- | --- | --- | --- |
-| `reservation.dojoId().equals(dojo.id())` | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | C8a: Reserva distinta (Reserva diferente ID dojo) | Ninguno | N/A |
-| `!reservation.trainingDate().equals(trainingDate)` | C8b: Reserva distinta (Reserva mismo ID dojo pero distinta fecha) | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | Ninguno | N/A |
+| Condicion atomica                                  | Caso que evalua verdadero                                         | Caso que evalua falso                             | Casos adicionales | Justificacion si no es factible |
+| -------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------- | ----------------- | ------------------------------- |
+| `reservation.dojoId().equals(dojo.id())`           | C9: Ocupado (Reserva mismo ID dojo y misma fecha)                 | C8a: Reserva distinta (Reserva diferente ID dojo) | Ninguno           | N/A                             |
+| `!reservation.trainingDate().equals(trainingDate)` | C8b: Reserva distinta (Reserva mismo ID dojo pero distinta fecha) | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | Ninguno           | N/A                             |
 
-<<<<<<< Updated upstream
-=======
 #### Método 3: `findYoungestFighter`
 
 **Cálculo mediante las tres fórmulas:**
@@ -336,9 +315,6 @@ La decisión contiene dos condiciones atómicas:
 | `youngest == null`                                  | C5: Primer luchador de la lista   | C6 y C7: Segundo luchador           | Ninguno           | N/A                                                       |
 | `fighter.birthDate().isAfter(youngest.birthDate())` | C6: Segundo luchador nacido antes | C7: Segundo luchador nacido después | Ninguno           | En C5 no se evalúa debido al cortocircuito del operador ` |
 
-
-
->>>>>>> Stashed changes
 ---
 
 ### Actividad 2: Caja Negra (Búsqueda /dojos)
@@ -349,18 +325,14 @@ La decisión contiene dos condiciones atómicas:
 ### Actividad 3: Defectos y Calidad
 
 #### Defectos detectados y corregidos
-<<<<<<< Updated upstream
-| ID  | Prueba que revela el defecto | Esperado / observado | Causa y corrección | Commit |
-| --- | ---------------------------- | -------------------- | ------------------ | ------ |
-|     |                              |                      |                    |        |
-
-=======
 
 | ID  | Prueba que revela el defecto                                                                                                                                                 | Esperado / observado                                                                                                         | Causa y corrección                                                                                                                                                                         | Regresión posterior                                                               | Commit                                   |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | ---------------------------------------- |
 | D1  | C6: `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` y C7: `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Se esperaba seleccionar al luchador con la fecha de nacimiento más reciente. El método seleccionaba al de fecha más antigua. | La comparación utilizaba `isBefore()` en lugar de `isAfter()`. Se sustituyó por `isAfter()` para seleccionar correctamente al luchador más joven y conservar el primero en caso de empate. | 8 tests ejecutados, 8 superados, 0 fallos y 0 errores.                            | 68ee0e10c1ec575e899ae089aec009d6d4436515 |
 | D2  | ```testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent```                                                                               | ```Se esperaba `Discount(20)`, pero el método devolvía `Discount(10)` para exactamente dos años completos de desempleo.  ``` | La condición `completeYears > 2` no contemplaba el límite de dos años. Se sustituyó por `completeYears >= 2`.                                                                              | 12 tests ejecutados, 12 superados, 0 fallos y 0 errores en la regresión ampliada. |                                          |
->>>>>>> Stashed changes
+| D3  | `testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse`                                                                                                      | Esperado: false. Observado: bucle infinito o evalúa incorrectamente (defecto lógico C5)                                      | El bucle `for` no verificaba correctamente la existencia del arma requerida. Se ha sustituido por `available.containsAll(required)`                                                        | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
+| D4  | `testGivenDojoWithReservationOnSameDateWhenFindFirstAvailableThenReturnsEmpty` y `testGivenFirstDojoOccupiedAndSecondFreeWhenFindFirstAvailableThenReturnsSecondDojo`        | Esperado: `Optional.empty()` / `Optional.of(dojo2)`. Observado: Devolvía un dojo ocupado en la misma fecha.                  | La condición de fecha invertía la lógica de ocupación con un `!`. He  eliminado  el operador `!` en la comparación de fechas de la reserva.                                                | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
+
 #### Indicadores de calidad
 *(Tabla de JaCoCo y PIT pendiente)*
 

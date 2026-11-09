@@ -36,8 +36,7 @@ class DojoSearchServiceTest {
         katana = new Weapon("Katana");
         bo = new Weapon("Bo");
         
-        // Instancia un objeto Money ficticio para que el Dojo no falle.
-        // CÁMBIALO por la forma correcta en la que se cree en tu código (ej: new Money(0), Money.of(0), etc.)
+        // instancisamos un objeto Money ficticio para que el Dojo no falle
         Money dummyPrice = new Money(java.math.BigDecimal.ZERO); 
         
         dojoEmpty = new Dojo("D1", "Dojo Vacio", dummyPrice, new HashSet<>());

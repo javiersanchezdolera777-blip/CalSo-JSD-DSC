@@ -142,7 +142,7 @@ Las fechas de entrega y cualquier instrucción institucional adicional se comuni
 Cálculo mediante las fórmulas:
 1. **CC = A - N + S + 1** = 8 - 8 + 4 + 1 = **5**
 2. **CC = P + 1** = 4 + 1 = **5**
-*(Complejidad Ciclomática = 5. Identificamos 5 caminos base).*
+*(Complejidad Ciclomática = 5. Identificamos 5 caminos base)*
 
 **2. Caminos independientes y datos de prueba**
 
@@ -310,15 +310,48 @@ La decisión contiene dos condiciones atómicas:
 - **A:** `youngest == null`.
 - **B:** `fighter.birthDate().isBefore(youngest.birthDate())`.
 
-| Condición atómica                                   | Caso que evalúa verdadero         | Caso que evalúa falso               | Casos adicionales | Justificación si no es factible                           |
-| --------------------------------------------------- | --------------------------------- | ----------------------------------- | ----------------- | --------------------------------------------------------- |
-| `youngest == null`                                  | C5: Primer luchador de la lista   | C6 y C7: Segundo luchador           | Ninguno           | N/A                                                       |
-| `fighter.birthDate().isAfter(youngest.birthDate())` | C6: Segundo luchador nacido antes | C7: Segundo luchador nacido después | Ninguno           | En C5 no se evalúa debido al cortocircuito del operador ` |
+| Condición atómica                                   | Caso que evalúa verdadero         | Caso que evalúa falso               | Casos adicionales | Justificación si no es factible                         |
+| --------------------------------------------------- | --------------------------------- | ----------------------------------- | ----------------- | ------------------------------------------------------- |
+| `youngest == null`                                  | C5: Primer luchador de la lista   | C6 y C7: Segundo luchador           | Ninguno           | N/A                                                     |
+| `fighter.birthDate().isAfter(youngest.birthDate())` | C6: Segundo luchador nacido antes | C7: Segundo luchador nacido después | Ninguno           | En C5 no se evalúa debido al cortocircuito del operador |
+|                                                     |                                   |                                     |                   |                                                         |
 
 ---
 
 ### Actividad 2: Caja Negra (Búsqueda /dojos)
 *(Tablas de clases de equivalencia y valores límite pendientes)*
+
+### Actividad 2: Caja Negra (Búsqueda /dojos)
+
+**1. Tabla de clases de equivalencia**
+
+| Código de clase | Variable       | Condición de pertenencia                             | Válida / inválida | Comportamiento exigido                               |
+| --------------- | -------------- | ---------------------------------------------------- | ----------------- | ---------------------------------------------------- |
+| CE1             | `teamId`       | Identificador de un equipo existente (ej. EQ-001)    | Válida            | Permite la búsqueda y muestra la tabla de dojos      |
+| CE2             | `teamId`       | Identificador vacío o nulo                           | Inválida          | Muestra error: `team id is required`                 |
+| CE3             | `teamId`       | Identificador inexistente en el catálogo (ej EQ-999) | Inválida          | Muestra error: `team does not exist`                 |
+| CE4             | `trainingDate` | Fecha estrictamente posterior a la actual            | Válida            | Permite la búsqueda y evalúa disponibilidad          |
+| CE5             | `trainingDate` | Fecha igual a la actual                              | Inválida          | Muestra error: `training date must be in the future` |
+| CE6             | `trainingDate` | Fecha anterior a la actual                           | Inválida          | Muestra error: `training date must be in the future` |
+
+**2. Casos de prueba**
+ 
+| ID del caso | Clases cubiertas | Equipo/dojo/fecha o URL concreta                | Estado inicial                          | Resultado único esperado                                                         | Nombre prueba                                                      |
+| ----------- | ---------------- | ----------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| CP1         | CE1, CE4         | `teamId` = EQ-001, `trainingDate` = 2026-10-25  | Catálogo intacto (D-001 tiene reservas) | Muestra `#dojo-table` resaltando el primer dojo libre y compatible con las armas | `testGivenValidTeamAndFutureDateWhenSearchThenShowsAvailableDojo`  |
+| CP2         | CE2, CE4         | `teamId` = (vacío), `trainingDate` = 2026-10-25 | N/A                                     | Muestra `#error` indicando `Team id is required`                                 | `testGivenEmptyTeamWhenSearchThenShowsTeamRequiredError`           |
+| CP3         | CE3, CE4         | `teamId` = EQ-999, `trainingDate` = 2026-10-25  | Navegación directa por URL o inyección  | Muestra `#error` indicando `Team does not exist`                                 | `testGivenNonExistentTeamWhenSearchThenShowsTeamDoesNotExistError` |
+| CP4         | CE1, CE5         | `teamId` = EQ-001, `trainingDate` = 2026-10-20  | N/A                                     | Muestra `#error` indicando `Training date must be in the future`                 | `testGivenTodayDateWhenSearchThenShowsDateMustBeFutureError`       |
+
+**3. Valores límite (Reloj fijo E2E: 2026-10-20)**
+
+| Variable       | Valor del límite         | Valor elegido | Expectativas                                             |
+| -------------- | ------------------------ | ------------- | -------------------------------------------------------- |
+| `trainingDate` | Día anterior a "hoy"     | 2026-10-19    | Rechaza con error `Training date must be in the future`  |
+| `trainingDate` | El mismo día de "hoy"    | 2026-10-20    | Rechaza  con error `Training date must be in the future` |
+| `trainingDate` | El día siguiente a "hoy" | 2026-10-21    | Búsqueda válida, se procesa el formulario correctamente  |
+
+
 
 ---
 
@@ -326,13 +359,13 @@ La decisión contiene dos condiciones atómicas:
 
 #### Defectos detectados y corregidos
 
-| ID  | Prueba que revela el defecto                                                                                                                                                 | Esperado / observado                                                                                                         | Causa y corrección                                                                                                                                                                         | Regresión posterior                                                               | Commit                                   |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | ---------------------------------------- |
-| D1  | C6: `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` y C7: `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Se esperaba seleccionar al luchador con la fecha de nacimiento más reciente. El método seleccionaba al de fecha más antigua. | La comparación utilizaba `isBefore()` en lugar de `isAfter()`. Se sustituyó por `isAfter()` para seleccionar correctamente al luchador más joven y conservar el primero en caso de empate. | 8 tests ejecutados, 8 superados, 0 fallos y 0 errores.                            | 68ee0e10c1ec575e899ae089aec009d6d4436515 |
-| D2  | ```testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent```                                                                               | ```Se esperaba `Discount(20)`, pero el método devolvía `Discount(10)` para exactamente dos años completos de desempleo.  ``` | La condición `completeYears > 2` no contemplaba el límite de dos años. Se sustituyó por `completeYears >= 2`.                                                                              | 12 tests ejecutados, 12 superados, 0 fallos y 0 errores en la regresión ampliada. |                                          |
-| D3  | `testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse`                                                                                                      | Esperado: false. Observado: bucle infinito o evalúa incorrectamente (defecto lógico C5)                                      | El bucle `for` no verificaba correctamente la existencia del arma requerida. Se ha sustituido por `available.containsAll(required)`                                                        | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
-| D4  | `testGivenDojoWithReservationOnSameDateWhenFindFirstAvailableThenReturnsEmpty` y `testGivenFirstDojoOccupiedAndSecondFreeWhenFindFirstAvailableThenReturnsSecondDojo`        | Esperado: `Optional.empty()` / `Optional.of(dojo2)`. Observado: Devolvía un dojo ocupado en la misma fecha.                  | La condición de fecha invertía la lógica de ocupación con un `!`. He  eliminado  el operador `!` en la comparación de fechas de la reserva.                                                | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
-
+| ID  | Prueba que revela el defecto                                                                                                                                                 | Esperado / observado                                                                                                         | Causa y corrección                                                                                                                                                                                       | Regresión posterior                                                               | Commit                                   |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------- |
+| D1  | C6: `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` y C7: `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Se esperaba seleccionar al luchador con la fecha de nacimiento más reciente. El método seleccionaba al de fecha más antigua. | La comparación utilizaba `isBefore()` en lugar de `isAfter()`. Se sustituyó por `isAfter()` para seleccionar correctamente al luchador más joven y conservar el primero en caso de empate.               | 8 tests ejecutados, 8 superados, 0 fallos y 0 errores.                            | 68ee0e10c1ec575e899ae089aec009d6d4436515 |
+| D2  | `testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent                                                                                    | ```Se esperaba `Discount(20)`, pero el método devolvía `Discount(10)` para exactamente dos años completos de desempleo.  ``` | La condición `completeYears > 2` no contemplaba el límite de dos años. Se sustituyó por `completeYears >= 2`.                                                                                            | 12 tests ejecutados, 12 superados, 0 fallos y 0 errores en la regresión ampliada. |                                          |
+| D3  | `testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse`                                                                                                      | Esperado: false. Observado: bucle infinito o evalúa incorrectamente (defecto lógico C5)                                      | El bucle `for` no verificaba correctamente la existencia del arma requerida. Se ha sustituido por `available.containsAll(required)`                                                                      | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
+| D4  | `testGivenDojoWithReservationOnSameDateWhenFindFirstAvailableThenReturnsEmpty` y `testGivenFirstDojoOccupiedAndSecondFreeWhenFindFirstAvailableThenReturnsSecondDojo`        | Esperado: `Optional.empty()` / `Optional.of(dojo2)`. Observado: Devolvía un dojo ocupado en la misma fecha                   | La condición de fecha invertía la lógica de ocupación con un `!`. He  eliminado  el operador `!` en la comparación de fechas de la reserva.                                                              | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
+| D5  | `testGivenEmptyTeamWhenSearchThenShowsTeamRequiredError`                                                                                                                     | Esperado: Mensaje #error con `Team id is required`. Observado: `TimeoutException` al no renderizarse la página de error      | El controlador enmascaraba el campo vacío por el `defaultValue` de Spring y no validaba la ausencia. He quitado el `defaultValue` e inyectado una validación explícita con listas vacías para Thymeleaf. | 5 tests E2E ejecutados, 5 superados.                                              | `d7223a9`                                |
 #### Indicadores de calidad
 *(Tabla de JaCoCo y PIT pendiente)*
 

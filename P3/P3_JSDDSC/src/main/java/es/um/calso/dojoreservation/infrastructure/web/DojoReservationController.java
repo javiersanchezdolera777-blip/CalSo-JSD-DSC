@@ -49,8 +49,8 @@ public class DojoReservationController {
     }
 
     @GetMapping("/coste")
-    public String coste(@RequestParam(name = "teamId", defaultValue = "EQ-001") String teamId,
-            @RequestParam(name = "dojoId", defaultValue = "D-002") String dojoId,
+    public String coste(@RequestParam(name = "teamId", required = false) String teamId,
+            @RequestParam(name = "dojoId", required = false) String dojoId,
             @RequestParam(name = "trainingDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                     LocalDate trainingDate, Model model) {
         LocalDate date = trainingDate == null ? LocalDate.now(clock).plusDays(1) : trainingDate;

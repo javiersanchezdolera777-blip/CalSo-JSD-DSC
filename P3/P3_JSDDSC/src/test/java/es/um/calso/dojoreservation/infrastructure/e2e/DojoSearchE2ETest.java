@@ -19,11 +19,19 @@ class DojoSearchE2ETest extends BrowserE2ESupport {
         assertFalse(tableContent.isBlank(), "La tabla de dojos no debería estar vacía");
     }
 
-    @Test
+    /*@Test
     void testGivenEmptyTeamWhenSearchThenShowsTeamRequiredError() {
         // CP2: equipo vacío. Como el select no tiene opción con value="", me ha dado error al ejecutarlo por primera vez
         // por eso, siguiendo la recomendación de 'guia pruebas', inyectamos el teamId vacío directamente por URL con open()
         open("/dojos?teamId=&trainingDate=2026-10-25");
+        
+        assertEquals("Team id is required", textOf("error"));
+    }*/
+    
+    @Test
+    void testGivenEmptyTeamWhenSearchThenShowsTeamRequiredError() {
+        // CP2: equipo vacío. omitimos por completo el teamId de la petición GET 
+        open("/dojos?trainingDate=2026-10-25");
         
         assertEquals("Team id is required", textOf("error"));
     }

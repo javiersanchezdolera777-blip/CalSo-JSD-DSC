@@ -36,7 +36,7 @@ public final class DojoSearchService {
                 
                 for (Reservation reservation : reservations) {
                     if (reservation.dojoId().equals(dojo.id())
-                            && !reservation.trainingDate().equals(trainingDate)) {
+                            && reservation.trainingDate().equals(trainingDate)) {  // quitamos la negación '!'
                         occupied = true;
                         break;
                     }
@@ -62,11 +62,6 @@ public final class DojoSearchService {
             throw new NullPointerException("Required weapons are required");
         }
 
-        for (Weapon weapon : required) {
-            if (available.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+        return available.containsAll(required);  // sustituimos el bloque del 'for' por esta línea para arreglar el fallo
     }
 }

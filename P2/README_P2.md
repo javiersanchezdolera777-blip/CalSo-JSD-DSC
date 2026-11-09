@@ -513,4 +513,4 @@ El desarrollo se ha realizado incrementalmente mediante pruebas JUnit 5, identif
 
 **Commit de `main` analizado:** *4a5259aa6dc6540249f92258e86a861ac66cd423*.
 
-**Enlace al vídeo externo (oculto/no listado):** *completar*.
+**Enlace al vídeo externo (oculto/no listado):** *https://youtu.be/wxY8QWHNBxY*.

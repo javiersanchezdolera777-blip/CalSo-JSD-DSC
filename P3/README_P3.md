@@ -15,9 +15,9 @@ El documento [especificación funcional](docs/ESPECIFICACION.md) es la referenci
 
 Si la práctica es realizada por un único alumno deberá implementar el total de las pruebas de todos los ficheros propuestos para realizar las pruebas y deberá realizar la entrega completa de la práctica. En el caso de grupos formados por dos miembros se deberá seguir el siguiente reparto de responsabilidades:
 
-| Integrante | Caja blanca: métodos de dominio | Caja negra: interfaz |
-|---|---|---|
-| **Alumno 1** | `containsAllRequiredWeapons` y `DojoSearchService.findFirstAvailableDojo`  | Búsqueda de dojos (`/dojos`) |
+| Integrante   | Caja blanca: métodos de dominio                                            | Caja negra: interfaz               |
+| ------------ | -------------------------------------------------------------------------- | ---------------------------------- |
+| **Alumno 1** | `containsAllRequiredWeapons` y `DojoSearchService.findFirstAvailableDojo`  | Búsqueda de dojos (`/dojos`)       |
 | **Alumno 2** | `ReservationDiscountService.findYoungestFighter` y `calculateBestDiscount` | Costes y bonificaciones (`/coste`) |
 
 Cada estudiante es responsable del **diseño, implementación, ejecución, análisis y corrección** de su parte. Ambos deben comprender la integración final, revisar las aportaciones del compañero y garantizar una regresión conjunta.
@@ -25,7 +25,6 @@ Cada estudiante es responsable del **diseño, implementación, ejecución, anál
 ## 3. Actividad 1 · Pruebas de caja blanca
 
 Las pruebas de caja blanca integran **dos técnicas en un mismo proceso**: diseño de caminos independientes y cobertura de condiciones. Estas pruebas deben completarse íntegramente antes de iniciar las pruebas de caja negra.
-
 ### Diseño de caminos independientes
 
 Para cada uno de los dos métodos asignados a cada participante (todos los métodos para los grupos de un único participante) se realizarán los siguinetes pasos:
@@ -121,3 +120,207 @@ El vídeo mostrará la aplicación o las herramientas en funcionamiento y la int
 - [Plantilla del workflow GitHub Actions para cada grupo](dos/GUIA_PRUEBAS.md#plantilla-de-github-actions-para-el-repositorio-del-grupo).
 
 Las fechas de entrega y cualquier instrucción institucional adicional se comunicarán mediante el Aula Virtual
+
+
+## Resolución del grupo
+
+### Identificación
+* **Integrante 1 (Javier Sánchez Dólera):** Caja blanca (`containsAllRequiredWeapons`, `findFirstAvailableDojo`) y Caja negra (Búsqueda `/dojos`). Rama: `feature/p3-javier-busqueda`
+* **Integrante 2 (Diego Sánchez Cano):** Caja blanca (`findYoungestFighter`, `calculateBestDiscount`) y Caja negra (Costes `/coste`). Rama: `feature/p3-diego-costes`
+
+---
+
+### Actividad 1: Caja Blanca
+
+#### Método 1: `containsAllRequiredWeapons`
+**1. Grafo de flujo y Complejidad Ciclomática**
+* **Nodos (N):** 8
+* **Aristas (A):** 8 (1->2, 1->3, 3->4, 3->5, 5->6, 5->8, 6->7, 6->5)
+* **Nodos Predicado:** 4 (tres `if` y un `for`)
+* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 5 (5 caminos base).
+
+**2. Caminos independientes y datos de prueba**
+
+| Método                       | Nodo o camino identificado | Datos de entrada y fecha                                                                           | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
+| ---------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------- | --------------- | ------------------- |
+| `containsAllRequiredWeapons` | C1: 1->2                   | `available = null`, `required = {Cualquier}`                                                       | Lanza `NullPointerException`            |                 |                     |
+| `containsAllRequiredWeapons` | C2: 1->3->4                | `available = {}`, `required = null`                                                                | Lanza `NullPointerException`            |                 |                     |
+| `containsAllRequiredWeapons` | C3: 1->3->5->8             | `available = {Katana}`, `required = {}`                                                            | Devuelve `true`                         |                 |                     |
+| `containsAllRequiredWeapons` | C4: 1->3->5->6->7          | `available = {}`, `required = {Katana}`                                                            | Devuelve `false`                        |                 |                     |
+| `containsAllRequiredWeapons` | C5: 1->3->5->6->5->8       | NO FACTIBLE. Si `available` no está vacío, no evalúa el contenido, iterando hasta devolver `true`. | N/A (Defecto lógico)                    | N/A             | N/A                 |
+
+
+#### Método 2: `findFirstAvailableDojo`
+**1. Grafo de flujo y Complejidad Ciclomática**
+* **Nodos (N):** 18
+* **Aristas (A):** 19
+* **Nodos Predicado:** 8
+* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 9 (9 caminos base).
+
+**2. Caminos independientes y datos de prueba**
+
+| Método                   | Nodo o camino identificado        | Datos de entrada y fecha                | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
+| ------------------------ | --------------------------------- | --------------------------------------- | --------------------------------------- | --------------- | ------------------- |
+| `findFirstAvailableDojo` | C1: Excepción dojos null          | `dojos = null`                          | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C2: Excepción armas null          | `dojos = [], requiredWeapons = null`    | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C3: Excepción reservas null       | `reservations = null`                   | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C4: Excepción fecha null          | `trainingDate = null`                   | Lanza `NullPointerException`            |                 |                     |
+| `findFirstAvailableDojo` | C5: Lista dojos vacía             | `dojos = []`                            | Devuelve `Optional.empty()`             |                 |                     |
+| `findFirstAvailableDojo` | C6: Dojo sin armas                | Dojo 1 sin armas requeridas             | Devuelve `Optional.empty()`             |                 |                     |
+| `findFirstAvailableDojo` | C7: Dojo con armas, sin reservas  | Dojo 1 con armas, `reservations = []`   | Devuelve `Optional.of(dojo1)`           |                 |                     |
+| `findFirstAvailableDojo` | C8: Reserva distinta (ID o Fecha) | Dojo 1, Reserva Dojo 2 o fecha distinta | Devuelve `Optional.of(dojo1)`           |                 |                     |
+| `findFirstAvailableDojo` | C9: Reserva coincide (Ocupado)    | Dojo 1, Reserva Dojo 1, MISMA fecha     | Devuelve `Optional.empty()`             |                 |                     |
+
+#### Cobertura de Condiciones (Método 2: Bucle de reservas)
+
+| Condicion atomica | Caso que evalua verdadero | Caso que evalua falso | Casos adicionales | Justificacion si no es factible |
+| --- | --- | --- | --- | --- |
+| `reservation.dojoId().equals(dojo.id())` | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | C8a: Reserva distinta (Reserva diferente ID dojo) | Ninguno | N/A |
+| `!reservation.trainingDate().equals(trainingDate)` | C8b: Reserva distinta (Reserva mismo ID dojo pero distinta fecha) | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | Ninguno | N/A |
+
+#### Método 3: `findYoungestFighter`
+
+**Cálculo mediante las tres fórmulas:**
+
+| Fórmula | Sustitución | Resultado |
+|---|---|---:|
+| V(G) = A - N + 2 | 20 - 15 + 2 | **7** |
+| V(G) = P + 1 | 6 + 1 | **7** |
+| V(G) = R | 7 | **7** |
+
+**Complejidad ciclomática: V(G) = 7 (7 caminos independientes).**
+
+**1. Grafo de flujo y Complejidad Ciclomática**
+* **Nodos (N):** 15
+* **Aristas (A):** 20
+* **Nodos Predicado:** 6
+* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 7.
+
+**Base de caminos independientes **
+
+| Camino | Secuencia de nodos                                                                                         | Situación que representa        |
+| ------ | ---------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| C1     | 1 → 2(V) → 3 → 15                                                                                          | Lista de luchadores nula        |
+| C2     | 1 → 2(F) → 4(V) → 5 → 15                                                                                   | Fecha de referencia nula        |
+| C3     | 1 → 2(F) → 4(F) → 6 → 7(F) → 14 → 15                                                                       | Lista vacía                     |
+| C4     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(V) → 10 → 15                                                            | Luchador nulo                   |
+| C5     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 13 → 7(F) → 14 → 15                                        | Un único luchador válido        |
+| C6     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 13 → 7(V) → 8 → 9(F) → 11(F) → 12(V) → 13 → 7(F) → 14 → 15 | Segundo luchador nacido antes   |
+| C7     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 13 → 7(V) → 8 → 9(F) → 11(F) → 12(F) → 7(F) → 14 → 15      | Segundo luchador nacido después |
+
+
+**2. Caminos independientes y datos de prueba**
+
+| Método | Nodo o camino identificado | Datos de entrada y fecha | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
+|---|---|---|---|---|---|
+| `findYoungestFighter` | C1: Excepción lista nula | `fighters = null`, `referenceDate = 2026-10-20` | Lanza `NullPointerException("Fighters are required")` | `testGivenNullFightersWhenFindYoungestFighterThenThrowsFightersAreRequired` | Pendiente |
+| `findYoungestFighter` | C2: Excepción fecha nula | `fighters = []`, `referenceDate = null` | Lanza `NullPointerException("Reference date is required")` | `testGivenNullReferenceDateWhenFindYoungestFighterThenThrowsReferenceDateIsRequired` | Pendiente |
+| `findYoungestFighter` | C3: Lista vacía | `fighters = []`, `referenceDate = 2026-10-20` | Devuelve `Optional.empty()` | `testGivenEmptyFightersWhenFindYoungestFighterThenReturnsEmpty` | Pendiente |
+| `findYoungestFighter` | C4: Luchador nulo | `fighters = [null]`, `referenceDate = 2026-10-20` | Lanza `NullPointerException("Null fighter")` | `testGivenNullFighterWhenFindYoungestFighterThenThrowsNullFighter` | Pendiente |
+| `findYoungestFighter` | C5: Un único luchador | Un luchador nacido el `2000-05-10`, `referenceDate = 2026-10-20` | Devuelve el único luchador de la lista | `testGivenOneFighterWhenFindYoungestFighterThenReturnsThatFighter` | Pendiente |
+| `findYoungestFighter` | C6: Segundo luchador nacido antes | Luchador 1 nacido el `2000-05-10`; luchador 2 nacido el `1999-02-20`. `referenceDate = 2026-10-20` | Devuelve el luchador 1, por tener la fecha de nacimiento más reciente | `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` | Pendiente |
+| `findYoungestFighter` | C7: Segundo luchador nacido después | Luchador 1 nacido el `2000-05-10`; luchador 2 nacido el `2005-02-20`. `referenceDate = 2026-10-20` | Devuelve el luchador 2, por tener la fecha de nacimiento más reciente | `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Pendiente |
+
+**Prueba complementaria: empate en la fecha de nacimiento**
+
+Esta prueba comprueba la regla de desempate establecida en la especificación: cuando dos luchadores tienen la misma fecha de nacimiento, se debe conservar el primero de la lista. Sigue el mismo recorrido que C7: la condición `youngest == null` es falsa y la comparación de las fechas también resulta falsa.
+
+| Método                | Situación                                       | Datos de entrada y fecha                                                                                 | Resultado esperado según especificación  | Nombre del test                                                                       | Resultado ejecución |
+| --------------------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `findYoungestFighter` | Dos luchadores con la misma fecha de nacimiento | Luchador 1 nacido el `2005-02-20`; luchador 2 nacido el `2005-02-20`. Fecha de referencia: `2026-10-20`. | Devuelve el primer luchador de la lista. | `testGivenTwoFightersWithSameBirthDateWhenFindYoungestFighterThenReturnsFirstFighter` | Pendiente           |
+
+#### Método 4: calculateBestDiscount
+
+**Cálculo mediante las tres fórmulas:**
+
+| Fórmula | Sustitución | Resultado |
+|---|---|---:|
+| V(G) = A - N + 2 | 37 - 27 + 2 | **12** |
+| V(G) = P + 1 | 11 + 1 | **12** |
+| V(G) = R | 12 | **12** |
+
+**Complejidad ciclomática: V(G) = 12 (12 caminos independientes estructurales).**
+
+**1. Grafo de flujo y Complejidad Ciclomática**
+* **Nodos (N):** 27
+* **Aristas (A):** 37
+* **Nodos Predicado:** 11
+* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 12.
+
+**Base de caminos independientes**
+
+| Camino | Secuencia de nodos                                                                                                                                                                                   | Situación que representa                                                        |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| C1     | 1 → 2(V) → 3 → 27                                                                                                                                                                                    | Lista de luchadores nula                                                        |
+| C2     | 1 → 2(F) → 4(V) → 5 → 27                                                                                                                                                                             | Fecha de entrenamiento nula                                                     |
+| C3     | 1 → 2(F) → 4(F) → 6 → 7(F) → 11(F) → 26 → 27                                                                                                                                                         | Lista vacía                                                                     |
+| C4     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(F) → 15 → 16(F) → 11(F) → 26 → 27                                                                                                            | Luchador adulto sin desempleo                                                   |
+| C5     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(V) → 10 → 11(V) → 12 → 13(F) → 15 → 16(F) → 11(F) → 26 → 27                                                                                                       | Luchador menor de 18 años sin desempleo                                         |
+| C6     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(V) → 14 → 27<br>                                                                                                                             | Rama `fighter == null` del segundo bucle                                        |
+| C7     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(V) → 19 → 24(V) → 25 → 11(F) → 26 → 27                                                                             | Desempleo de 3 años completos o más                                             |
+| C8     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(F) → 20(V) → 21 → 24(V) → 25 → 11(F) → 26 → 27                                                                     | Rama `completeYears > 2` verdadera                                              |
+| C9     | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(F) → 20(F) → 22(V) → 23 → 24(V) → 25 → 11(F) → 26 → 27                                                             | Desempleo de exactamente 2 años completos                                       |
+| C10    | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(F) → 20(F) → 22(F) → 24(F) → 11(F) → 26 → 27                                                                       | Desempleo inferior a 1 año completo                                             |
+| C11    | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(V) → 10 → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(F) → 20(F) → 22(V) → 23 → 24(F) → 11(F) → 26 → 27                                                             | Luchador menor de 18 años con un año completo de desempleo                      |
+| C12    | 1 → 2(F) → 4(F) → 6 → 7(V) → 8 → 9(F) → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(V) → 19 → 24(V) → 25 → 11(V) → 12 → 13(F) → 15 → 16(V) → 17 → 18(F) → 20(F) → 22(V) → 23 → 24(F) → 11(F) → 26 → 27 | Dos luchadores con diferentes períodos de desempleo y dos iteraciones del bucle |
+
+**2. Caminos independientes y datos de prueba**
+
+| Método                  | Nodo o camino identificado                                | Datos de entrada y fecha                                                                                                                                                 | Resultado esperado según especificación                    | Nombre del test                                                                                                  | Resultado ejecución |
+| ----------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `calculateBestDiscount` | C1: Excepción lista nula                                  | `fighters = null`, `trainingDate = 2026-10-20`                                                                                                                           | Lanza `NullPointerException("Fighters are required")`      | `testGivenNullFightersWhenCalculateBestDiscountThenThrowsFightersAreRequired`                                    | Pendiente           |
+| `calculateBestDiscount` | C2: Excepción fecha nula                                  | `fighters = []`, `trainingDate = null`                                                                                                                                   | Lanza `NullPointerException("Training date is required")`  | `testGivenNullTrainingDateWhenCalculateBestDiscountThenThrowsTrainingDateIsRequired`                             | Pendiente           |
+| `calculateBestDiscount` | C3: Lista vacía                                           | `fighters = []`, `trainingDate = 2026-10-20`                                                                                                                             | Devuelve `Discount(0)`                                     | `testGivenEmptyFightersWhenCalculateBestDiscountThenReturnsZeroDiscount`                                         | Pendiente           |
+| `calculateBestDiscount` | C4: Luchador adulto sin desempleo                         | Un luchador nacido el `2000-05-10`, sin período de desempleo. Fecha `2026-10-20`                                                                                         | Devuelve `Discount(0)`                                     | `testGivenAdultFighterWithoutUnemploymentWhenCalculateBestDiscountThenReturnsZeroDiscount`                       | Pendiente           |
+| `calculateBestDiscount` | C5: Luchador menor de 18 años                             | Un luchador nacido el `2009-05-10`, sin período de desempleo. Fecha `2026-10-20`                                                                                         | Devuelve `Discount(15)`                                    | `testGivenYoungFighterWithoutUnemploymentWhenCalculateBestDiscountThenReturnsFifteenPercent`                     | Pendiente           |
+| `calculateBestDiscount` | C6: Luchador nulo en el segundo bucle                     | Ninguna entrada coherente puede alcanzar esta rama                                                                                                                       | No factible                                                | N/A                                                                                                              | Pendiente           |
+| `calculateBestDiscount` | C7: Desempleo de 3 años completos                         | Un luchador adulto nacido el `1990-05-10`, con desempleo iniciado el `2023-10-20`. Fecha `2026-10-20`                                                                    | Devuelve `Discount(30)`                                    | `testGivenThreeCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsThirtyPercent`                     | Pendiente           |
+| `calculateBestDiscount` | C8: Condición `completeYears > 2` verdadera (no factible) | No existe ningún valor entero que cumpla `completeYears >= 3` falso y `completeYears > 2` verdadero                                                                      | Camino no factible                                         | N/A                                                                                                              | N/A                 |
+| `calculateBestDiscount` | C9: Exactamente 2 años completos de desempleo             | Un luchador adulto nacido el `1990-05-10`, con desempleo iniciado el `2024-10-20`. Fecha `2026-10-20`                                                                    | Devuelve `Discount(20)`                                    | `testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent`                       | Pendiente           |
+| `calculateBestDiscount` | C10: Desempleo inferior a 1 año completo                  | Un luchador adulto nacido el `1990-05-10`, con desempleo iniciado el `2025-10-21`. Fecha `2026-10-20`                                                                    | Devuelve `Discount(0)`                                     | `testGivenLessThanOneCompleteYearOfUnemploymentWhenCalculateBestDiscountThenReturnsZeroDiscount`                 | Pendiente           |
+| `calculateBestDiscount` | C11: Bonificación por desempleo inferior a la de juventud | Un luchador nacido el `2009-05-10`, con desempleo iniciado el `2025-05-10`. Fecha `2026-10-20`                                                                           | Devuelve `Discount(15)`, conservando la mayor bonificación | `testGivenYoungFighterWithOneCompleteYearOfUnemploymentWhenCalculateBestDiscountThenKeepsYouthDiscount`          | Pendiente           |
+| `calculateBestDiscount` | C12: Dos luchadores con distintos períodos de desempleo   | Luchador 1 adulto, nacido el `1990-05-10`, desempleado desde `2023-10-20`; luchador 2 adulto, nacido el `1995-05-10`, desempleado desde `2025-10-20`. Fecha `2026-10-20` | Devuelve `Discount(30)`, sin sumar las bonificaciones      | `testGivenFightersWithThirtyAndTenPercentUnemploymentDiscountsWhenCalculateBestDiscountThenReturnsThirtyPercent` | Pendiente           |
+
+**Comportamiento excepcional complementario**
+
+Aunque la rama `fighter == null` del segundo bucle es inalcanzable con una lista estable, el contrato del método establece que una lista que contiene un luchador nulo provoca `NullPointerException("Null fighter")`. Se añade una prueba específica para comprobar este comportamiento. La excepción se produce durante la llamada previa a `findYoungestFighter`, por lo que esta prueba no cubre la rama inalcanzable del segundo bucle.
+
+| Método | Situación | Datos de entrada y fecha | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
+|---|---|---|---|---|---|
+| `calculateBestDiscount` | Lista que contiene un luchador nulo | `fighters = [null]`, `trainingDate = 2026-10-20` | Lanza `NullPointerException("Null fighter")`, propagada desde `findYoungestFighter`. | `testGivenListContainingNullFighterWhenCalculateBestDiscountThenThrowsNullFighter` | Pendiente |
+
+#### Cobertura de Condiciones (Método 3: `findYoungestFighter`)
+
+Se analiza la decisión compuesta del método `findYoungestFighter`:
+
+`youngest == null || fighter.birthDate().isBefore(youngest.birthDate())`
+
+La decisión contiene dos condiciones atómicas:
+
+- **A:** `youngest == null`.
+- **B:** `fighter.birthDate().isBefore(youngest.birthDate())`.
+
+| Condición atómica                                    | Caso que evalúa verdadero         | Caso que evalúa falso               | Casos adicionales | Justificación si no es factible                           |
+| ---------------------------------------------------- | --------------------------------- | ----------------------------------- | ----------------- | --------------------------------------------------------- |
+| `youngest == null`                                   | C5: Primer luchador de la lista   | C6 y C7: Segundo luchador           | Ninguno           | N/A                                                       |
+| `fighter.birthDate().isBefore(youngest.birthDate())` | C6: Segundo luchador nacido antes | C7: Segundo luchador nacido después | Ninguno           | En C5 no se evalúa debido al cortocircuito del operador ` |
+
+
+
+---
+
+### Actividad 2: Caja Negra (Búsqueda /dojos)
+*(Tablas de clases de equivalencia y valores límite pendientes)*
+
+---
+
+### Actividad 3: Defectos y Calidad
+
+#### Defectos detectados y corregidos
+| ID  | Prueba que revela el defecto | Esperado / observado | Causa y corrección | Commit |
+| --- | ---------------------------- | -------------------- | ------------------ | ------ |
+|     |                              |                      |                    |        |
+
+#### Indicadores de calidad
+*(Tabla de JaCoCo y PIT pendiente)*
+

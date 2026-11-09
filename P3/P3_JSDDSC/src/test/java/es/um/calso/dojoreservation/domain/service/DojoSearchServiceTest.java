@@ -71,10 +71,16 @@ class DojoSearchServiceTest {
 
     @Test
     void testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse() {
-        // C4 y C5: Intentamos buscar una Katana en un set vacío.
-        // Debido al defecto lógico C5 (el código no busca, solo mira si available está vacío)
-        // Esto fallará hasta que arregles el código de producción.
+    	// C4: no hay armas disponibles y se requiere una katana
         assertFalse(searchService.containsAllRequiredWeapons(new HashSet<>(), Set.of(katana)));
+    }
+    
+    @Test
+    void testGivenAvailableKatanaAndMissingBoWhenCheckingContainsAllThenReturnsFalse() {
+        Set<Weapon> available = Set.of(katana);
+        Set<Weapon> required = Set.of(katana, bo);
+
+        assertFalse(searchService.containsAllRequiredWeapons(available, required));
     }
 
     // ==========================================
@@ -151,5 +157,20 @@ class DojoSearchServiceTest {
         
         assertTrue(result.isPresent());
         assertEquals("D3", result.get().id());
+    }
+    
+    @Test
+    void testGivenReservationForDifferentDojoOnSameDateWhenFindFirstAvailableThenReturnsDojo() {
+        Reservation otherDojoReservation = new Reservation("D99", today);
+
+        Optional<Dojo> result = searchService.findFirstAvailableDojo(
+                List.of(dojoWithKatana),
+                Set.of(katana),
+                List.of(otherDojoReservation),
+                today
+        );
+
+        assertTrue(result.isPresent());
+        assertEquals("D2", result.get().id());
     }
 }

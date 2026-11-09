@@ -52,4 +52,12 @@ class DojoSearchE2ETest extends BrowserE2ESupport {
         
         assertEquals("Training date must be in the future", textOf("error"));
     }
+    
+    // me ha faltado el test del día anterior:
+    @Test
+    void testGivenYesterdayDateWhenSearchThenShowsDateMustBeFutureError() {
+        searchDojos("EQ-001", "2026-10-19");
+
+        assertEquals("Training date must be in the future", textOf("error"));
+    }
 }

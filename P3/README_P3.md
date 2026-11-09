@@ -38,10 +38,10 @@ Para cada uno de los dos métodos asignados a cada participante (todos los méto
 
 Después de la fase anterior y **antes de implementar los tests**, cada integrante analizará una decisión compuesta asignada (para los grupos formados por un único participante se analizarán las dos condiciones):
 
-| Integrante | Método | Decisión cuyo conjunto de condiciones se debe cubrir |
-|---|---|---|
-| Alumno 1 | `DojoSearchService.findFirstAvailableDojo` | La decisión del bucle de reservas que combina con `&&` la igualdad del identificador de dojo y de la fecha de entrenamiento |
-| Alumno 2 | `ReservationDiscountService.findYoungestFighter` | La decisión que combina con `\|\|` la comprobación `youngest == null` y la comparación de las fechas de nacimiento |
+| Integrante | Método                                           | Decisión cuyo conjunto de condiciones se debe cubrir                                                                        |
+| ---------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| Alumno 1   | `DojoSearchService.findFirstAvailableDojo`       | La decisión del bucle de reservas que combina con `&&` la igualdad del identificador de dojo y de la fecha de entrenamiento |
+| Alumno 2   | `ReservationDiscountService.findYoungestFighter` | La decisión que combina con `\|\|` la comprobación `youngest == null` y la comparación de las fechas de nacimiento          |
 
 Se identificarán las condiciones atómicas y los resultados verdadero y falso **efectivamente evaluados** en los casos ya propuestos para caminos independientes. Se tendrán en cuenta las reglas de cortocircuito de Java: una condición no evaluada no cuenta como falsa. Si faltan evaluaciones factibles, se propondrán **solo las pruebas necesarias** para cubrirlas, con sus entradas, fechas y resultados funcionales esperados. Las evaluaciones no factibles deberán justificarse. No se exige cobertura de condiciones de otras decisiones.
 
@@ -135,49 +135,59 @@ Las fechas de entrega y cualquier instrucción institucional adicional se comuni
 #### Método 1: `containsAllRequiredWeapons`
 **1. Grafo de flujo y Complejidad Ciclomática**
 * **Nodos (N):** 8
-* **Aristas (A):** 8 (1->2, 1->3, 3->4, 3->5, 5->6, 5->8, 6->7, 6->5)
-* **Nodos Predicado:** 4 (tres `if` y un `for`)
-* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 5 (5 caminos base).
+* **Aristas (A):** 8
+* **Nodos de Salida (S):** 4 (dos `throw` y dos `return`)
+* **Nodos Predicado (P):** 4 (tres `if` y un `for`)
+
+Cálculo mediante las fórmulas:
+1. **CC = A - N + S + 1** = 8 - 8 + 4 + 1 = **5**
+2. **CC = P + 1** = 4 + 1 = **5**
+*(Complejidad Ciclomática = 5. Identificamos 5 caminos base)*
 
 **2. Caminos independientes y datos de prueba**
 
-| Método                       | Nodo o camino identificado | Datos de entrada y fecha                                                                           | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
-| ---------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------- | --------------- | ------------------- |
-| `containsAllRequiredWeapons` | C1: 1->2                   | `available = null`, `required = {Cualquier}`                                                       | Lanza `NullPointerException`            |                 |                     |
-| `containsAllRequiredWeapons` | C2: 1->3->4                | `available = {}`, `required = null`                                                                | Lanza `NullPointerException`            |                 |                     |
-| `containsAllRequiredWeapons` | C3: 1->3->5->8             | `available = {Katana}`, `required = {}`                                                            | Devuelve `true`                         |                 |                     |
-| `containsAllRequiredWeapons` | C4: 1->3->5->6->7          | `available = {}`, `required = {Katana}`                                                            | Devuelve `false`                        |                 |                     |
-| `containsAllRequiredWeapons` | C5: 1->3->5->6->5->8       | NO FACTIBLE. Si `available` no está vacío, no evalúa el contenido, iterando hasta devolver `true`. | N/A (Defecto lógico)                    | N/A             | N/A                 |
-
+| Método                       | Nodo o camino identificado | Datos de entrada y fecha                          | Resultado esperado según especificación | Nombre del test                                                                      | Resultado ejecución                          |
+| ---------------------------- | -------------------------- | ------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `containsAllRequiredWeapons` | C1: 1->2                   | `available = null`, `required = {Cualquier}`      | Lanza `NullPointerException`            | `testGivenAvailableWeaponsNullWhenCheckingContainsAllThenThrowsNullPointerException` | Superado                                     |
+| `containsAllRequiredWeapons` | C2: 1->3->4                | `available = {}`, `required = null`               | Lanza `NullPointerException`            | `testGivenRequiredWeaponsNullWhenCheckingContainsAllThenThrowsNullPointerException`  | Superado                                     |
+| `containsAllRequiredWeapons` | C3: 1->3->5->8             | `available = {Katana}`, `required = {}`           | Devuelve `true`                         | `testGivenEmptyRequiredWeaponsWhenCheckingContainsAllThenReturnsTrue`                | Superado                                     |
+| `containsAllRequiredWeapons` | C4: 1->3->5->6->7          | `available = {}`, `required = {Katana}`           | Devuelve `false`                        | `testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse`              | Falla inicialmente, superado tras corrección |
+| `containsAllRequiredWeapons` | C5: 1->3->5->6->5->8       | `available = {Katana}`, `required = {Katana, Bo}` | Devuelve `false`                        | `testGivenAvailableKatanaAndMissingBoWhenCheckingContainsAllThenReturnsFalse`        | Falla inicialmente y superado tras correción |
 
 #### Método 2: `findFirstAvailableDojo`
 **1. Grafo de flujo y Complejidad Ciclomática**
 * **Nodos (N):** 18
-* **Aristas (A):** 19
-* **Nodos Predicado:** 8
-* **Complejidad Ciclomática:** CC = Nodos Predicado + 1 = 9 (9 caminos base).
+* **Aristas (A):** 21
+* **Nodos de Salida (S):** 6 (cuatro `throw` y dos `return`)
+* **Nodos Predicado (P):** 9 (cuatro `if` iniciales, dos `for`, un `if` de armas, un `if` de reservas y un `if` final)
+
+Cálculo mediante las fórmulas:
+1. **CC = A - N + S + 1** = 21 - 18 + 6 + 1 = **10**
+2. **CC = P + 1** = 9 + 1 = **10**
+*(Complejidad Ciclomática = 10. Identificamos 10 caminos base).*
 
 **2. Caminos independientes y datos de prueba**
 
-| Método                   | Nodo o camino identificado        | Datos de entrada y fecha                | Resultado esperado según especificación | Nombre del test | Resultado ejecución |
-| ------------------------ | --------------------------------- | --------------------------------------- | --------------------------------------- | --------------- | ------------------- |
-| `findFirstAvailableDojo` | C1: Excepción dojos null          | `dojos = null`                          | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C2: Excepción armas null          | `dojos = [], requiredWeapons = null`    | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C3: Excepción reservas null       | `reservations = null`                   | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C4: Excepción fecha null          | `trainingDate = null`                   | Lanza `NullPointerException`            |                 |                     |
-| `findFirstAvailableDojo` | C5: Lista dojos vacía             | `dojos = []`                            | Devuelve `Optional.empty()`             |                 |                     |
-| `findFirstAvailableDojo` | C6: Dojo sin armas                | Dojo 1 sin armas requeridas             | Devuelve `Optional.empty()`             |                 |                     |
-| `findFirstAvailableDojo` | C7: Dojo con armas, sin reservas  | Dojo 1 con armas, `reservations = []`   | Devuelve `Optional.of(dojo1)`           |                 |                     |
-| `findFirstAvailableDojo` | C8: Reserva distinta (ID o Fecha) | Dojo 1, Reserva Dojo 2 o fecha distinta | Devuelve `Optional.of(dojo1)`           |                 |                     |
-| `findFirstAvailableDojo` | C9: Reserva coincide (Ocupado)    | Dojo 1, Reserva Dojo 1, MISMA fecha     | Devuelve `Optional.empty()`             |                 |                     |
+| Método                   | Nodo o camino identificado        | Datos de entrada y fecha                | Resultado esperado según especificación | Nombre del test                                                                      | Resultado ejecución                          |
+| ------------------------ | --------------------------------- | --------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `findFirstAvailableDojo` | C1: Excepción dojos null          | `dojos = null`                          | Lanza `NullPointerException`            | `testGivenNullDojosWhenFindFirstAvailableThenThrowsNullPointerException`             | Superado                                     |
+| `findFirstAvailableDojo` | C2: Excepción armas null          | `dojos = [], requiredWeapons = null`    | Lanza `NullPointerException`            | `testGivenNullRequiredWeaponsWhenFindFirstAvailableThenThrowsNullPointerException`   | Superado                                     |
+| `findFirstAvailableDojo` | C3: Excepción reservas null       | `reservations = null`                   | Lanza `NullPointerException`            | `testGivenNullReservationsWhenFindFirstAvailableThenThrowsNullPointerException`      | Superado                                     |
+| `findFirstAvailableDojo` | C4: Excepción fecha null          | `trainingDate = null`                   | Lanza `NullPointerException`            | `testGivenNullTrainingDateWhenFindFirstAvailableThenThrowsNullPointerException`      | Superado                                     |
+| `findFirstAvailableDojo` | C5: Lista dojos vacía             | `dojos = []`                            | Devuelve `Optional.empty()`             | `testGivenEmptyDojoListWhenFindFirstAvailableThenReturnsEmpty`                       | Superado                                     |
+| `findFirstAvailableDojo` | C6: Dojo sin armas                | Dojo 1 sin armas requeridas             | Devuelve `Optional.empty()`             | `testGivenDojoWithoutRequiredWeaponsWhenFindFirstAvailableThenReturnsEmpty`          | Superado                                     |
+| `findFirstAvailableDojo` | C7: Dojo con armas, sin reservas  | Dojo 1 con armas, `reservations = []`   | Devuelve `Optional.of(dojo1)`           | `testGivenAvailableDojoWithoutReservationsWhenFindFirstAvailableThenReturnsDojo`     | Superado                                     |
+| `findFirstAvailableDojo` | C8: Reserva distinta (ID o Fecha) | Dojo 1, Reserva Dojo 2 o fecha distinta | Devuelve `Optional.of(dojo1)`           | `testGivenDojoWithReservationOnDifferentDateWhenFindFirstAvailableThenReturnsDojo`   | Superado                                     |
+| `findFirstAvailableDojo` | C9: Reserva coincide (Ocupado)    | Dojo 1, Reserva Dojo 1, MISMA fecha     | Devuelve `Optional.empty()`             | `testGivenDojoWithReservationOnSameDateWhenFindFirstAvailableThenReturnsEmpty`       | Falla inicialmente, superado tras corrección |
+| findFirstAvailableDojo   | C10: Siguiente iteración bucle    | Dojo 1, Ocupado<br>Dojo 2, Libre        | Devuelve `Optional.of(dojo2)`           | `testGivenFirstDojoOccupiedAndSecondFreeWhenFindFirstAvailableThenReturnsSecondDojo` | Falla inicialmente, superado tras corrección |
 
 #### Cobertura de Condiciones (Método 2: Bucle de reservas)
 
-| Condicion atomica | Caso que evalua verdadero | Caso que evalua falso | Casos adicionales | Justificacion si no es factible |
-| --- | --- | --- | --- | --- |
-| `reservation.dojoId().equals(dojo.id())` | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | C8a: Reserva distinta (Reserva diferente ID dojo) | Ninguno | N/A |
-| `!reservation.trainingDate().equals(trainingDate)` | C8b: Reserva distinta (Reserva mismo ID dojo pero distinta fecha) | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | Ninguno | N/A |
-
+| Condicion atomica                                  | Caso que evalua verdadero                                         | Caso que evalua falso                             | Casos adicionales | Justificacion si no es factible |
+| -------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------- | ----------------- | ------------------------------- |
+| `reservation.dojoId().equals(dojo.id())`           | C9: Ocupado (Reserva mismo ID dojo y misma fecha)                 | C8a: Reserva distinta (Reserva diferente ID dojo) | Ninguno           | N/A                             |
+| `!reservation.trainingDate().equals(trainingDate)` | C8b: Reserva distinta (Reserva mismo ID dojo pero distinta fecha) | C9: Ocupado (Reserva mismo ID dojo y misma fecha) | Ninguno           | N/A                             |
+Como prueba complementaria, se añadió `testGivenReservationForDifferentDojoOnSameDateWhenFindFirstAvailableThenReturnsDojo`, que comprueba que la primera condición es falsa y que, debido al cortocircuito de `&&`, la segunda no llega a evaluarse
 #### Método 3: `findYoungestFighter`
 
 **Cálculo mediante las tres fórmulas:**
@@ -300,17 +310,92 @@ La decisión contiene dos condiciones atómicas:
 - **A:** `youngest == null`.
 - **B:** `fighter.birthDate().isBefore(youngest.birthDate())`.
 
-| Condición atómica                                   | Caso que evalúa verdadero         | Caso que evalúa falso               | Casos adicionales | Justificación si no es factible                           |
-| --------------------------------------------------- | --------------------------------- | ----------------------------------- | ----------------- | --------------------------------------------------------- |
-| `youngest == null`                                  | C5: Primer luchador de la lista   | C6 y C7: Segundo luchador           | Ninguno           | N/A                                                       |
-| `fighter.birthDate().isAfter(youngest.birthDate())` | C6: Segundo luchador nacido antes | C7: Segundo luchador nacido después | Ninguno           | En C5 no se evalúa debido al cortocircuito del operador ` |
-
-
+| Condición atómica                                   | Caso que evalúa verdadero         | Caso que evalúa falso               | Casos adicionales | Justificación si no es factible                         |
+| --------------------------------------------------- | --------------------------------- | ----------------------------------- | ----------------- | ------------------------------------------------------- |
+| `youngest == null`                                  | C5: Primer luchador de la lista   | C6 y C7: Segundo luchador           | Ninguno           | N/A                                                     |
+| `fighter.birthDate().isAfter(youngest.birthDate())` | C6: Segundo luchador nacido antes | C7: Segundo luchador nacido después | Ninguno           | En C5 no se evalúa debido al cortocircuito del operador |
+|                                                     |                                   |                                     |                   |                                                         |
 
 ---
 
 ### Actividad 2: Caja Negra (Búsqueda /dojos)
 *(Tablas de clases de equivalencia y valores límite pendientes)*
+
+### Actividad 2: Caja Negra (Búsqueda /dojos)
+
+**1. Tabla de clases de equivalencia**
+
+| Código de clase | Variable         | Condición de pertenencia                                                 | Válida / inválida | Comportamiento exigido                               |
+| --------------- | ---------------- | ------------------------------------------------------------------------ | ----------------- | ---------------------------------------------------- |
+| CE1             | `teamId`         | Identificador de un equipo existente (ej. EQ-001)                        | Válida            | Permite la búsqueda y muestra la tabla de dojos      |
+| CE2             | `teamId`         | Identificador vacío o nulo                                               | Inválida          | Muestra error: `team id is required`                 |
+| CE3             | `teamId`         | Identificador inexistente en el catálogo (ej EQ-999)                     | Inválida          | Muestra error: `team does not exist`                 |
+| CE4             | `trainingDate`   | Fecha estrictamente posterior a la actual                                | Válida            | Permite la búsqueda y evalúa disponibilidad          |
+| CE5             | `trainingDate`   | Fecha igual a la actual                                                  | Inválida          | Muestra error: `training date must be in the future` |
+| CE6             | `trainingDate`   | Fecha anterior a la actual                                               | Inválida          | Muestra error: `training date must be in the future` |
+| CE-T1           | Equipo           | Equipo existente sin bonificaciones EQ-002                               | Válida            | no hay descuento                                     |
+| CE-T2           | Equipo           | Equipo con luchador menor de 18 años EQ-003                              | Válida            | Descuento juvenil del 15 %                           |
+| CE-T3           | Equipo           | Equipo con desempleo inferior a un año completo : EQ-004                 | Válida            | Descuento por Desempleo del 0 %                      |
+| CE-T4           | Equipo           | equipo con desempleo de 1 a menos de 2 años completos EQ-004             | Válida            | Descuento del 10 %                                   |
+| CE-T5           | Equipo           | Equipo con desempleo de 2 a menos de 3 años completos EQ-004 o el EQ-005 | Válida            | Descuento del 20 %                                   |
+| CE-T6           | Equipo           | Equipo con desempleo de 3 años completos o más: EQ-005                   | Válida            | Descuento del 30 %                                   |
+| CE-T7           | Equipo           | Equipo en el que hayan bonificaciones juvenil y por desempleo EQ-001     | Válida            | Aplicar exclusivamente la mayor bonificación         |
+| CE-T8           | `teamId`         | Identificador vacío                                                      | Inválida          | Mostrar Team id is required                          |
+| CE-T9           | `teamId`         | Identificador inexistente                                                | Inválida          | Mostrar Team does not exist                          |
+| CE-D1           | `dojoId`         | Identificador de un dojo existente                                       | Válida            | Utilizar el precio base.                             |
+| CE-D2           | `dojoId`         | Identificador vacío                                                      | Inválida          | El id del dojo es necesario                          |
+| CE-D3           | `dojoId`         | Identificador inexistente                                                | Inválida          | El dojo no existe                                    |
+| CE-F1           | `trainingDate`   | Fecha anterior al reloj de aplicación                                    | Inválida          | Mostrar: La fecha debe ser futura                    |
+| CE-F2           | `trainingDate`   | Fecha igual al reloj de aplicación                                       | Inválida          | Mostrar: La fecha debe ser futura                    |
+| CE-F3           | `trainingDate`   | Fecha posterior al reloj de aplicación                                   | Válida            | Permitir calcular el coste                           |
+| CE-A1           | Armas requeridas | Equipo que requiere una única arma distinta EQ-002                       | Válida            | Aplicar un suplemento de 5 €                         |
+| CE-A2           | Armas requeridas | Equipo que requiere dos armas distintas EQ-001                           | Válida            | Aplicar un suplemento de 10 €                        |
+
+
+**2. Casos de prueba**
+ 
+| ID del caso | Clases cubiertas    | Equipo/dojo/fecha o URL concreta                            | Estado inicial                                     | Resultado único esperado                                                                             | Nombre prueba                                                                                       |
+| ----------- | ------------------- | ----------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| CP1         | CE1, CE4            | `teamId` = EQ-001, `trainingDate` = 2026-10-21              | Catálogo intacto (D-001 tiene reservas)            | Muestra `#dojo-table` resaltando el primer dojo libre y compatible con las armas                     | `testGivenValidTeamAndFutureDateWhenSearchThenShowsAvailableDojo`                                   |
+| CP2         | CE2, CE4            | `teamId` = (vacío), `trainingDate` = 2026-10-25             | N/A                                                | Muestra `#error` indicando `Team id is required`                                                     | `testGivenEmptyTeamWhenSearchThenShowsTeamRequiredError`                                            |
+| CP3         | CE3, CE4            | `teamId` = EQ-999, `trainingDate` = 2026-10-25              | Navegación directa por URL o inyección             | Muestra `#error` indicando `Team does not exist`                                                     | `testGivenNonExistentTeamWhenSearchThenShowsTeamDoesNotExistError`                                  |
+| CP4         | CE1, CE5            | `teamId` = EQ-001, `trainingDate` = 2026-10-20              | N/A                                                | Muestra `#error` indicando `Training date must be in the future`                                     | `testGivenTodayDateWhenSearchThenShowsDateMustBeFutureError`                                        |
+| C01         | CE-T8               | `teamId=&dojoId=D-001&trainingDate=2026-10-21`              | Catálogo original                                  | Mostrar : necesita id del equipo                                                                     | `testGivenMissingTeamIdWhenCalculateCostThenShowsTeamIdRequired`                                    |
+| C02         | CE-D2               | `/coste?teamId=EQ-002&dojoId=&trainingDate=2026-10-21`      | Catálogo original                                  | Mostrar: necesito dojo id                                                                            | `testGivenMissingDojoIdWhenCalculateCostThenShowsDojoIdRequired`                                    |
+| C03         | CE-T9               | `/coste?teamId=EQ-999&dojoId=D-001&trainingDate=2026-10-21` | Catálogo original                                  | Mostrar: el equipo no existe                                                                         | `testGivenUnknownTeamIdWhenCalculateCostThenShowsTeamDoesNotExist`                                  |
+| C04         | CE-D3               | `/coste?teamId=EQ-002&dojoId=D-999&trainingDate=2026-10-21` | Catálogo original                                  | Mostrar que el Dojo does not exist                                                                   | `testGivenUnknownDojoIdWhenCalculateCostThenShowsDojoDoesNotExist`                                  |
+| C05         | CE-F1               | `EQ-002`, `D-003`, `2026-10-19`                             | Reloj de aplicación: 20/10/2026                    | Mostrar que la fecha debe ser futura                                                                 | `testGivenPastTrainingDateWhenCalculateCostThenShowsFutureDateRequired`                             |
+| C06         | CE-F2               | `EQ-002`, `D-003`, `2026-10-20`                             | Reloj de aplicación: 20/10/2026                    | Mostrar: que la fecha debe ser futura                                                                | `testGivenTodayAsTrainingDateWhenCalculateCostThenShowsFutureDateRequired`                          |
+| C07         | CE-T1, CE-A1, CE-F3 | `EQ-002`, `D-003`, `2026-10-21`                             | Catálogo original                                  | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 0 %; precio final: 40,00 €   | `testGivenTomorrowTrainingDateWithRegularTeamAndDojoSurWhenCalculateCostThenCalculatesPrices`       |
+| C08         | CE-T7, CE-A2, CE-F3 | `EQ-001`, `D-001`, `2026-11-20`                             | D-001 tiene una reserva para esa fecha             | Precio base: 40,00 €; suplemento: 10,00 €; subtotal: 50,00 €; descuento: 20 %; precio final: 40,00 € | `testGivenReservedDojoDateWhenCalculateCostThenStillCalculatesCost`                                 |
+| C09         | CE-T7, CE-A2, CE-F3 | `EQ-001`, `D-002`, `2026-10-21`                             | Catálogo original                                  | Precio base: 50,00 €; suplemento: 10,00 €; subtotal: 60,00 €; descuento: 15 %; precio final: 51,00 € | `testGivenTwoRequiredWeaponsAndCompetingDiscountsWhenCalculateCostThenAppliesOnlyHighestDiscount`   |
+| C10         | CE-T2               | `EQ-003`, `D-003`, `2027-11-19`                             | Luchador más joven con 17 años                     | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 15 %; precio final: 34,00 €  | `testGivenYoungestFighterIsSeventeenWhenCalculateCostThenAppliesYouthDiscount`                      |
+| C11         | CE-T2               | `EQ-003`, `D-003`, `2027-11-20`                             | El luchador más joven cumple 18 años               | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 0 %; precio final: 40,00 €   | `testGivenYoungestFighterTurnsEighteenWhenCalculateCostThenDoesNotApplyYouthDiscount`               |
+| C12         | CE-T2               | `EQ-003`, `D-003`, `2027-11-21`                             | Un día después de cumplir 18 años                  | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 0 %; precio final: 40,00 €   | `testGivenYoungestFighterIsOlderThanEighteenWhenCalculateCostThenDoesNotApplyYouthDiscount`         |
+| C13         | CE-T3               | `EQ-004`, `D-003`, `2026-11-19`                             | Un día antes de completar un año de desempleo      | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 0 %; precio final: 40,00 €   | `testGivenUnemploymentOneDayShortOfOneYearWhenCalculateCostThenAppliesNoUnemploymentDiscount`       |
+| C14         | CE-T4               | `EQ-004`, `D-003`, `2026-11-20`                             | Exactamente un año completo de desempleo           | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 10 %; precio final: 36,00 €  | `testGivenExactlyOneCompleteYearOfUnemploymentWhenCalculateCostThenAppliesTenPercentDiscount`       |
+| C15         | CE-T4               | `EQ-004`, `D-003`, `2026-11-21`                             | Un día después de completar un año de desempleo    | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 10 %; precio final: 36,00 €  | `testGivenOneDayMoreThanOneYearOfUnemploymentWhenCalculateCostThenAppliesTenPercentDiscount`        |
+| C16         | CE-T4               | `EQ-004`, `D-003`, `2027-11-19`                             | Un día antes de completar dos años de desempleo    | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 10 %; precio final: 36,00 €  | `testGivenUnemploymentOneDayShortOfTwoYearsWhenCalculateCostThenAppliesTenPercentDiscount`          |
+| C17         | CE-T5               | EQ-004, D-003, 2027-11-20                                   | Exactamente dos años completos de desempleo        | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 20 %; precio final: 32,00 €  | `testGivenExactlyTwoCompleteYearsOfUnemploymentWhenCalculateCostThenAppliesTwentyPercentDiscount`   |
+| C18         | CE-T5               | EQ-004, D-003,  2027-11-21                                  | Un día después de completar dos años de desempleo  | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 20 %; precio final: 32,00 €  | `testGivenOneDayMoreThanTwoYearsOfUnemploymentWhenCalculateCostThenAppliesTwentyPercentDiscount`    |
+| C19         | CE-T5               | EQ-005,  D-003, 2027-11-19                                  | Un día antes de completar tres años de desempleo   | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 20 %; precio final: 32,00 €  | `testGivenUnemploymentOneDayShortOfThreeYearsWhenCalculateCostThenAppliesTwentyPercentDiscount`     |
+| C20         | CE-T6               | EQ-005, D-003,  2027-11-20                                  | Exactamente tres años completos de desempleo       | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 30 %; precio final: 28,00 €  | `testGivenExactlyThreeCompleteYearsOfUnemploymentWhenCalculateCostThenAppliesThirtyPercentDiscount` |
+| C21         | CE-T6               | EQ-005 , D-003,  2027-11-27                                 | Un día después de completar tres años de desempleo | Precio base: 35,00 €; suplemento: 5,00 €; subtotal: 40,00 €; descuento: 30 %; precio final: 28,00 €  | `testGivenOneDayMoreThanThreeYearsOfUnemploymentWhenCalculateCostThenAppliesThirtyPercentDiscount`  |
+
+**3. Valores límite (Reloj fijo E2E: 2026-10-20)**
+
+| Variable                    | Valor del límite         | Valor elegido                                                             | Expectativas                                                                        |
+| --------------------------- | ------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `trainingDate`              | Día anterior a "hoy"     | 2026-10-19                                                                | Rechaza con error `Training date must be in the future`                             |
+| `trainingDate`              | El mismo día de "hoy"    | 2026-10-20                                                                | Rechaza  con error `Training date must be in the future`                            |
+| `trainingDate`              | El día siguiente a "hoy" | 2026-10-21                                                                | Búsqueda válida, se procesa el formulario correctamente                             |
+| Fecha de entrenamiento      | Fecha actual: 2026-10-20 | 2026-10-19 (antes), 2026-10-20 (límite), 2026-10-21 (después)             | Las dos primeras fechas deben rechazarse; la tercera debe aceptarse. Casos C05-C07. |
+| Edad del luchador más joven | 18 años                  | 2027-11-19 (17 años), 2027-11-20 (cumple 18), 2027-11-21 (un día después) | 15 % antes de cumplir 18 años y 0 % desde los 18. Casos C10-C12.                    |
+| Desempleo                   | 1 año completo           | 2026-11-19, 2026-11-20, 2026-11-21                                        | 0 % antes del año y 10 % desde el año completo. Casos C13-C15.                      |
+| Desempleo                   | 2 años completos         | 2027-11-19, 2027-11-20, 2027-11-21                                        | 10 % antes de dos años y 20 % desde los dos años completos. Casos C16-C18.          |
+| Desempleo                   | 3 años completos         | 2027-11-19, 2027-11-20, 2027-11-21                                        | 20 % antes de tres años y 30 % desde los tres años completos. Casos C19-C21.        |
+
+
 
 ---
 
@@ -318,10 +403,43 @@ La decisión contiene dos condiciones atómicas:
 
 #### Defectos detectados y corregidos
 
-| ID  | Prueba que revela el defecto                                                                                                                                                 | Esperado / observado                                                                                                         | Causa y corrección                                                                                                                                                                         | Regresión posterior                                                               | Commit                                   |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- | ---------------------------------------- |
-| D1  | C6: `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` y C7: `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Se esperaba seleccionar al luchador con la fecha de nacimiento más reciente. El método seleccionaba al de fecha más antigua. | La comparación utilizaba `isBefore()` en lugar de `isAfter()`. Se sustituyó por `isAfter()` para seleccionar correctamente al luchador más joven y conservar el primero en caso de empate. | 8 tests ejecutados, 8 superados, 0 fallos y 0 errores.                            | 68ee0e10c1ec575e899ae089aec009d6d4436515 |
-| D2  | ```testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent```                                                                               | ```Se esperaba `Discount(20)`, pero el método devolvía `Discount(10)` para exactamente dos años completos de desempleo.  ``` | La condición `completeYears > 2` no contemplaba el límite de dos años. Se sustituyó por `completeYears >= 2`.                                                                              | 12 tests ejecutados, 12 superados, 0 fallos y 0 errores en la regresión ampliada. |                                          |
+| ID  | Prueba que revela el defecto                                                                                                                                                 | Esperado / observado                                                                                                           | Causa y corrección                                                                                                                                                                                       | Regresión posterior                                                               | Commit                                   |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------- |
+| D1  | C6: `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` y C7: `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Se esperaba seleccionar al luchador con la fecha de nacimiento más reciente. El método seleccionaba al de fecha más antigua.   | La comparación utilizaba `isBefore()` en lugar de `isAfter()`. Se sustituyó por `isAfter()` para seleccionar correctamente al luchador más joven y conservar el primero en caso de empate.               | 8 tests ejecutados, 8 superados, 0 fallos y 0 errores.                            | 68ee0e10c1ec575e899ae089aec009d6d4436515 |
+| D2  | `testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent                                                                                    | Se esperaba `Discount(20)`, pero el método devolvía `Discount(10)` para exactamente dos años completos de desempleo.           | La condición `completeYears > 2` no contemplaba el límite de dos años. Se sustituyó por `completeYears >= 2`.                                                                                            | 12 tests ejecutados, 12 superados, 0 fallos y 0 errores en la regresión ampliada. |                                          |
+| D3  | `testGivenMissingRequiredWeaponWhenCheckingContainsAllThenReturnsFalse`                                                                                                      | Esperado: false. Observado: bucle infinito o evalúa incorrectamente (defecto lógico C5)                                        | El bucle `for` no verificaba correctamente la existencia del arma requerida. Se ha sustituido por `available.containsAll(required)`                                                                      | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
+| D4  | `testGivenDojoWithReservationOnSameDateWhenFindFirstAvailableThenReturnsEmpty` y `testGivenFirstDojoOccupiedAndSecondFreeWhenFindFirstAvailableThenReturnsSecondDojo`        | Esperado: `Optional.empty()` / `Optional.of(dojo2)`. Observado: Devolvía un dojo ocupado en la misma fecha                     | La condición de fecha invertía la lógica de ocupación con un `!`. He  eliminado  el operador `!` en la comparación de fechas de la reserva.                                                              | 14 tests ejecutados, 14 tests superados                                           | `2049ca2`                                |
+| D5  | `testGivenEmptyTeamWhenSearchThenShowsTeamRequiredError`                                                                                                                     | Esperado: Mensaje #error con `Team id is required`. Observado: `TimeoutException` al no renderizarse la página de error        | El controlador enmascaraba el campo vacío por el `defaultValue` de Spring y no validaba la ausencia. He quitado el `defaultValue` e inyectado una validación explícita con listas vacías para Thymeleaf. | 5 tests E2E ejecutados, 5 superados.                                              | `d7223a9`                                |
+| D6  | C6: `testGivenSecondFighterBornEarlierWhenFindYoungestFighterThenReturnsFirstFighter` y C7: `testGivenSecondFighterBornLaterWhenFindYoungestFighterThenReturnsSecondFighter` | Se esperaba seleccionar al luchador con la fecha de nacimiento más reciente. El método seleccionaba al de l fecha más antigua. | La comparación utilizaba isBefore() en lugar de isAfter() solo.                                                                                                                                          | 8 tests ejecutados, 8 superados, 0 fallos y 0 errores.                            | 68ee0e10c1ec575e899ae089aec009d6d4436515 |
+| D7  | C9: ```testGivenTwoCompleteYearsOfUnemploymentWhenCalculateBestDiscountThenReturnsTwentyPercent```                                                                           | ```Se esperaba `Discount(20)`, pero el método devolvía `Discount(10)` para exactamente dos años completos de desempleo  ```    | La condición `completeYears > 2` no contemplaba el límite de dos años y Se sustituyó por `completeYears >= 2`.                                                                                           | 12 tests ejecutados, 12 superados, 0 fallos y 0 errores en la regresión ampliada. | 0f517036be0af990d42b07ff5e4624947b74a2be |
+| D8  | C01 y C02: identificadores de equipo y dojo vacíos                                                                                                                           | Se esperaba  `Team id is required` o `Dojo id is required`. La aplicación utilizaba identificadores predeterminados            | Los parámetros del controlador `coste` utilizaban `defaultValue`, sustituyendo los valores vacíos por identificadores válidos. Se sustituyeron por `required = false`                                    | 21 pruebas ejecutadas, 21 superadas y 0 fallos tras la corrección.                | c67405c0e5570e7c2f4a9e8d712ba72a14015465 |
 #### Indicadores de calidad
-*(Tabla de JaCoCo y PIT pendiente)*
 
+Javier:
+
+**1. JaCoCo (Cobertura de ramas y líneas)**
+Al ejecutar `mvn clean verify`, la suite de JUnit superó con éxito las pruebas. El informe JaCoCo nos muestra que el paquete `es.um.calso.dojoreservation.domain.service` alcanzó una cobertura de instrucciones del **49 %** y una cobertura de ramas del **41 %**. Existen decisiones no ejecutadas (ramas "missed") en los servicios de dominio. Esto son decisiones excepcionales originadas por librerías subyacentes o caminos lógicos imposibles (como el defecto de la evaluación del contenido de la colección vacía de la Actividad 1) permanecen sin ejecución pq son escenarios no factibles bajo el contrato establecido en el documento de especificación
+
+**2. PIT (Análisis de mutaciones)**
+Cuando he ejecutado `mvn -Pmutation test pitest:mutationCoverage` localmente sobre las pruebas unitarias de los métodos de dominio, el informe PIT dio los siguientes resultados:
+*   **Mutaciones generadas:** 37
+*   **Mutaciones eliminadas (Killed):** 0 (0 %)
+*   **Mutaciones sin cobertura (No Coverage):** 37
+*   **Cobertura de línea (Line Coverage):** 0 %
+
+**Interpretación de los resultados de PIT:**
+Ese 0 % en mutaciones eliminadas no se atribuye a una falta de efectividad de las pruebas unitarias diseñadas en la Actividad 1, sino a una ausencia total de cobertura registrada por el motor PIT (`NO_COVERAGE 37`). A pesar de que la configuración en el `pom.xml` define correctamente los paquetes objetivo (`es.um.calso.dojoreservation.domain.service.*` y `*Test`), el analizador de mutaciones no ha lgorado enlazar la ejecución del framework JUnit 5 con las clases compiladas del dominio en el entorno local. Se produce una desconexión en la instrumentación, documentada como una limitación del entorno, que impide distinguir entre mutaciones detectadas y supervivientes.
+
+Diego:
+En mi parte, los resultados de JaCoCo para `ReservationDiscountService` son bastante buenos, con un 96 % de cobertura de instrucciones y un 97 % de cobertura de ramas.
+
+De las 40 líneas que tiene la clase, solamente queda una sin ejecutar. También queda una pequeña parte de la complejidad sin cubrir, aunque los 3 métodos aparecen ejecutados.
+Por tanto, considero que los tests realizados cubren practicamente toda la funcionalidad de los métodos que he trabajado (`findYoungestFighter` y `calculateBestDiscount`). Aun así, hay una pequeña parte que no se llega a ejecutar y que conviene revisar.
+
+Si miramos el paquete completo, la cobertura baja al 60 % de instrucciones y 53 % de ramas. Esto ocurre principalmente porque `DojoSearchService` aparece sin cobertura, ya que todavía falta integrar la parte de Javier. En cambio, `ReservationPricingService` tiene un 100 % de cobertura.
+En cuanto a PIT, se han generado 38 mutaciones en las tres clases analizadas. De ellas, 22 han sido detectadas por los tests, 2 han sobrevivido y 14 no han llegado a tener cobertura.
+La cobertura de mutaciones es del 58 %, mientras que la eficacia de los tests es del 92 %. Esto quiere decir que, de las mutaciones que han llegado a ser ejecutadas por las pruebas, la mayoría han sido detectadas correctamente.
+Los resultados son bastante buenos en cuanto a la capacidad de los tests para detectar cambios en el código. Sin embargo, todavía hay partes que no se ejecutan y que hacen que la cobertura general sea más baja. Por eso, creo que lo más importante es revisar las mutaciones que han sobrevivido y las zonas que no tienen cobertura.
+
+
+![Captura del informe PIT](evidencias/pit-report.png)

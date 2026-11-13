@@ -418,30 +418,44 @@ La decisión contiene dos condiciones atómicas:
 A continuación, se detalla el análisis de calidad del software basado en las métricas de cobertura (JaCoCo) y el análisis de mutaciones (PIT), separando los resultados obtenidos en las distintas clases del dominio.
 
 **1. JaCoCo (Cobertura de ramas y líneas)**
-Al ejecutar `mvn clean verify`, la suite de JUnit superó con éxito las 107 pruebas del proyecto. Los informes de JaCoCo evidencian que los tests diseñados en la Actividad 1 ejercitan efectivamente el código, aunque existen variaciones dependiendo de la clase analizada:
 
-*   **Parte de Javier (`DojoSearchService`):** El informe refleja una cobertura de instrucciones del 49 % y una cobertura de ramas del 41 %. Las decisiones no ejecutadas (ramas "Missed") están plenamente justificadas. Se corresponden con caminos lógicos inalcanzables o escenarios no factibles bajo el contrato de la especificación. Un ejemplo claro es el defecto de evaluación en colecciones abordado en la Actividad 1 (camino C5), cuya rama de código original generaba un bucle infinito que no se puede trazar de forma convencional sin colgar la ejecución.
-*   **Parte de Diego (`ReservationDiscountService`):** Los resultados muestran una cobertura casi total, con un 96 % de instrucciones y un 97 % de ramas. De las 40 líneas de la clase, prácticamente la totalidad son ejecutadas por los tests de caminos independientes. La mínima porción de complejidad sin cubrir obedece a protecciones defensivas del código (ej. validaciones de nulidad extremas impuestas por el framework o librerías subyacentes) que no son alcanzables con entradas lógicas de dominio.
+Al ejecutar `mvn clean verify`, la suite de JUnit superó con éxito las 107 pruebas del proyecto. Los informes de JaCoCo evidencian una cobertura sobresaliente tras la integración de las pruebas de ambos integrantes en la rama principal.
+
+Para el paquete clave de la lógica de negocio, `es.um.calso.dojoreservation.domain.service`, el informe refleja una cobertura casi total: **98 % de cobertura de instrucciones y 98 % de cobertura de ramas**.
+
+De un total de 73 líneas y 39 caminos lógicos (complejidad ciclomática) en los servicios del dominio, únicamente ha quedado sin ejecutar 1 línea y 1 rama (Missed Cxty: 1, Missed Lines: 1). Al analizar conjuntamente las partes de Javier (`DojoSearchService`) y Diego (`ReservationDiscountService`), confirmamos que esta mínima porción sin cubrir está plenamente justificada. Obedece a protecciones defensivas extremas del código o escenarios excepcionales (como el camino C5 lógicamente inalcanzable documentado en la Actividad 1) que no son físicamente trazables con entradas válidas de dominio sin provocar bloqueos. Esto demuestra la altísima exhaustividad y el éxito del diseño de caminos independientes de ambos alumnos.
 
 **2. PIT (Análisis de mutaciones)**
-Hemos ejecutado localmente el comando `mvn -Pmutation test pitest:mutationCoverage` sobre las clases de prueba del dominio. Los resultados globales arrojados por el informe HTML para el paquete `es.um.calso.dojoreservation.domain.service` son los siguientes:
-*   **Mutaciones generadas:** 38
-*   **Mutaciones eliminadas (Killed):** 2 (5 % de Mutation Coverage)
-*   **Cobertura de línea (Line Coverage):** 12 % (10/81 líneas)
-*   **Eficacia de pruebas (Test Strength):** 100 % (2/2)
+
+Para evaluar la resiliencia y eficacia (Test Strength) de nuestras aserciones, ejecutamos localmente el comando `mvn -Pmutation test pitest:mutationCoverage` sobre las clases de prueba del dominio. Una vez integrado el código en `main`, los resultados globales arrojados por el informe HTML para el paquete `es.um.calso.dojoreservation.domain.service` demuestran una altísima robustez:
+
+- **Mutaciones generadas:** 37
+    
+- **Mutaciones eliminadas (Killed):** 35 (95 % de Mutation Coverage)
+    
+- **Cobertura de línea (Line Coverage):** 99 % (72/73 líneas)
+    
+- **Eficacia de pruebas (Test Strength):** 95 % (35/37)
+    
 
 **Interpretación técnica y desglose de los resultados de PIT:**
-Si desglosamos el reporte por clases, observamos una anomalía técnica en la instrumentación:
-1.  `ReservationPricingService` (clase auxiliar): 100 % de cobertura de mutaciones (2/2).
-2.  `DojoSearchService`: 0 % de cobertura de mutaciones (0/14 generadas).
-3.  `ReservationDiscountService`: 0 % de cobertura de mutaciones (0/22 generadas).
 
-El 0 % obtenido en nuestras dos clases principales de estudio no indica en absoluto que las pruebas unitarias sean ineficaces. Como demuestra fehacientemente JaCoCo, los tests se ejecutan y cubren el código (alcanzando el 97 % de ramas en la clase de los descuentos). La causa de este resultado es que PIT ha clasificado las 36 mutaciones de estas dos clases bajo el estado `NO_COVERAGE`. 
+Si desglosamos el reporte por clases, confirmamos que el diseño de pruebas de Caja Blanca cumple de forma estricta con los estándares de calidad:
 
-Esto evidencia una limitación técnica del entorno local: la configuración del plugin `pitest-maven` definida en el `pom.xml` no ha logrado vincular correctamente la ejecución del framework JUnit 5 con el bytecode manipulado de `DojoSearchService` y `ReservationDiscountService` durante la fase de análisis. Al no registrarse el paso de los tests por el código mutado, PIT asume erróneamente que no hay cobertura. Por tanto, dejamos documentado que el bajo porcentaje global de mutaciones eliminadas es un falso negativo fruto de un desacoplo en la instrumentación, y no un defecto en el diseño de nuestros tests de Caja Blanca.
+1. **DojoSearchService (Parte de Javier):** Alcanza un **100 % de efectividad**. La suite ejecutó el 100 % de las líneas de código (25/25) y detectó y eliminó satisfactoriamente las 13 mutaciones generadas por la herramienta (13/13). La resiliencia de estos tests es total ante cualquier regresión introducida en la lógica de búsqueda.
+    
+2. **ReservationDiscountService (Parte de Diego):** Alcanza una eficacia sobresaliente, con un **97 % de cobertura de líneas** (37/38) y un **91 % de cobertura de mutaciones** (20 eliminadas de 22 generadas). El hecho de que 2 mutaciones hayan sobrevivido indica que, aunque la ejecución pasa por la práctica totalidad del código, existen ligeras variaciones inyectadas por PIT (como posibles mutantes equivalentes o alteraciones en la única línea sin cobertura) que no logran alterar el estado observable o el resultado funcional esperado por las aserciones de JUnit.
+    
+3. **ReservationPricingService (Clase auxiliar):** 100 % de cobertura de mutaciones (2/2) y 100 % de línea (10/10).
+    
+
+En conclusión, la suite de pruebas no solo cumple con la especificación funcional, sino que garantiza una red de seguridad extremadamente sólida frente a futuros cambios en el dominio.
+
+![Captura del informe PIT](evidencias/jacoco-report.png)
 
 ![Captura del informe PIT](evidencias/pit-report.png)
 
-![Captura del informe JACOCO](evidencias/jacoco-report.jpeg)
-Enlace Vídeo:
-https://youtu.be/FimTHsGgbRA
+
+Enlace Vídeo:https://www.youtube.com/watch?v=s7eeHpmWq60
+
+
